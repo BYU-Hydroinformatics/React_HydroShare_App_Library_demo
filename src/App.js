@@ -27,6 +27,50 @@ function TagsDiv(props) {
     );
 }
 
+function InputButton(props) {
+    if ( props.refUrl.search(/\${.*}/)=== -1) {
+        return null;
+    }
+    console.log(props.refUrl.search(/\${.*}/));
+    //todo: add onClick function that opens and closes InputView
+    return (
+        <button onClick=""><img href="static/img/inputs" alt="Optional HydroShare inputs. Click to view."/></button>
+    );
+
+}
+
+function InputView(props) { //todo: implement
+    if (props.inputs.length <= 0 && props.showDiv) {
+        return null;
+    }
+    const formInputs = []
+    props.inputs.forEach((input) => {
+        formInputs.push(
+            <div className="input-grid">
+                <b>{input}: </b><input name={input} value={input}/>
+            </div>
+        );
+    });
+    return (
+        <div class="input-view">
+           {/* <form id={props.key} onSubmit={{"openUrl("+props.key + ", " + props.url + ")"}}>  //Uncomment when begin to implement
+                {formInputs}
+                <input type="submit" value="Open App with inputs"/>
+            </form> */}
+        </div>
+    )
+}
+
+function openUrl(form, url) {
+    const name = document.getElementById(form).elements;
+    let finalUrl = url;
+    name.forEach((n) => {
+        let value = name.value;
+        finalUrl.replace("${" + n + "}", value)
+    });
+    window.open(finalUrl);
+}
+
 function App() {
 
     class Entry extends React.Component {
@@ -50,13 +94,20 @@ function App() {
             }
         }
 
+        changeShowInputs() { //onclick method
+            if (!this.state.showInputs === false && !this.state.showInputs === true) {
+                this.setState({showInputs: false});
+            } else {
+                this.setState({showInputs: !this.state.showInputs});
+
+            }
+        }
+
 
         render() {
             if (this.state.expandedState) {
-                console.log("Hello")
                 return (
 
-                    //todo: add expanded return
                     <div>
                         <div className={this.state.color + " entry expanded"}>
                             <div className='grid-1-1' scope="row">
@@ -74,7 +125,7 @@ function App() {
                             <div className="app-name"><h4>{this.state.metadata.name}</h4></div>
                             <div className="app-owner"><a>{this.state.metadata.owner}</a></div>
                             <div className="app-inputs">
-
+                                <InputButton refUrl={this.state.metadata.appLaunchingResourceUrlPattern}/>
                             </div>
                             <div className="app-abstract">
                                 <b>Abstract: </b>{this.state.metadata.abstract}
@@ -87,31 +138,31 @@ function App() {
                         </div>
 
                         <div className={this.state.color + ' app-grid-expanded'}>
-                                <div><b>Keywords: </b>{this.state.metadata.keywords}</div>
-                                <div><b>Home Page
-                                    URL: </b><a href={this.state.metadata.homeUrl}>{this.state.metadata.homeUrl}</a>
-                                </div>
-                                <div><b>Version: </b>{this.state.metadata.version}</div>
-                                <div><b>Views: </b>{this.state.metadata.views}</div>
-                                <div><b>Date Created: </b>{this.state.metadata.dateCreated}</div>
-                                <div><b>Last Update: </b>{this.state.metadata.lastUpdateDate}</div>
-                                <div><b>Supported Resource Types: </b>{this.state.metadata.supportedResourceTypes}</div>
-                                <div><b>App-launching Resource Level URL
-                                    Pattern: </b>{this.state.metadata.appLaunchingResourceUrlPattern}
-                                </div>
-                                <div><b>Supported Aggregation Types: </b>{this.state.metadata.aggregationTypes}</div>
-                                <div><b>Supported File Extensions: </b>{this.state.metadata.fileExtentions}</div>
-                                <div><b>Source Code URL: </b><a
-                                    href={this.state.metadata.sourceUrl}>{this.state.metadata.sourceUrl}</a></div>
-                                <div><b>Help Page URL: </b><a
-                                    href={this.state.metadata.helpUrl}>{this.state.metadata.helpUrl}</a></div>
-                                <div><b>Mailing List URL: </b><a
-                                    href={this.state.metadata.Url}>{this.state.metadata.mailUrl}</a></div>
-                                <div><b>Issues Page URL: </b><a
-                                    href={this.state.metadata.issueUrl}>{this.state.metadata.issueUrl}</a></div>
-                                <div className="app-citation">
-                                    <b>Citation: </b> {this.state.metadata.citation}
-                                </div>
+                            <div><b>Keywords: </b>{this.state.metadata.keywords}</div>
+                            <div><b>Home Page
+                                URL: </b><a href={this.state.metadata.homeUrl}>{this.state.metadata.homeUrl}</a>
+                            </div>
+                            <div><b>Version: </b>{this.state.metadata.version}</div>
+                            <div><b>Views: </b>{this.state.metadata.views}</div>
+                            <div><b>Date Created: </b>{this.state.metadata.dateCreated}</div>
+                            <div><b>Last Update: </b>{this.state.metadata.lastUpdateDate}</div>
+                            <div><b>Supported Resource Types: </b>{this.state.metadata.supportedResourceTypes}</div>
+                            <div><b>App-launching Resource Level URL
+                                Pattern: </b>{this.state.metadata.appLaunchingResourceUrlPattern}
+                            </div>
+                            <div><b>Supported Aggregation Types: </b>{this.state.metadata.aggregationTypes}</div>
+                            <div><b>Supported File Extensions: </b>{this.state.metadata.fileExtentions}</div>
+                            <div><b>Source Code URL: </b><a
+                                href={this.state.metadata.sourceUrl}>{this.state.metadata.sourceUrl}</a></div>
+                            <div><b>Help Page URL: </b><a
+                                href={this.state.metadata.helpUrl}>{this.state.metadata.helpUrl}</a></div>
+                            <div><b>Mailing List URL: </b><a
+                                href={this.state.metadata.Url}>{this.state.metadata.mailUrl}</a></div>
+                            <div><b>Issues Page URL: </b><a
+                                href={this.state.metadata.issueUrl}>{this.state.metadata.issueUrl}</a></div>
+                            <div className="app-citation">
+                                <b>Citation: </b> {this.state.metadata.citation}
+                            </div>
                         </div>
                     </div>
 
@@ -135,7 +186,7 @@ function App() {
                         <div className="app-name"><h4>{this.state.metadata.name}</h4></div>
                         <div className="app-owner"><a>{this.state.metadata.owner}</a></div>
                         <div className="app-inputs">
-
+                            <InputButton refUrl={this.state.metadata.appLaunchingResourceUrlPattern}/>
                         </div>
                         <div className="app-abstract">
                             <b>Abstract: </b>{this.state.metadata.abstract}
@@ -164,19 +215,26 @@ function App() {
                         'abstract': 'This is some code I made over the weekend. It is not done yet, but will be really cool.',
                         'isCuahsiApp': false,
                         'isCommunityApp': false,
-                    },
+                        'homeUrl':'http://temp' ,
+                        'appLaunchingResourceUrlPattern':'http://temp',
+
+            },
                     {
                         'name': 'Data Rods Explorer',
                         'owner': 'David E.',
                         'abstract': 'This is the data Rods explorer app. This uses NASA data',
                         'isCuahsiApp': true,
                         'isCommunityApp': false,
+                        'homeUrl':'http://temp' ,
+                        'appLaunchingResourceUrlPattern':'http://temp2',
                     },
                     {
                         'name': 'Snow Inspector',
                         'owner': 'Brigham Young University',
                         'isCuahsiApp': true,
                         'isCommunityApp': true,
+                        'homeUrl':'http://temp' ,
+                        'appLaunchingResourceUrlPattern':'http://temp/${hs_res}',
                     }
                 ],
                 currentUser: 'Hart Henrichsen', //todo add currentUser
@@ -211,7 +269,6 @@ function App() {
         }
 
     }
-
 
     return (
         <Dynamic_table></Dynamic_table>
