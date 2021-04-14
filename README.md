@@ -1,3 +1,24 @@
+This app is created for two purposes. The first as a demo of how the Dynamic components will appear for the proposed HydroShare App Library. The second is to act as a final project for a Web Development class at BYU. This app takes app metadata and automatically displays them. Features include, launching the app on clicking the icon, button to see more or less metadata, automatically generated tages for each app, automatically generated input button when a app accepts hydroshare inputs, and a dynamic form that allows the user to launch the app with user inputed HydroShare inputs.
+
+The organization of the app goes as follows:
+
+App has one and only one DynamicTable
+DynamicTable has zero or more Entry(s)
+Entry has one and only one ExpandedViwe
+Entry has zero or one InputView
+Entry has one and only one TagsDiv
+
+This app is not ment to be a fully functional demo of the proposed HydroShare App library some features do not exist and may never be implemented. First, this is built outside of the HydroShare environment, as I had more experiance with React than Vue at the time of creation and time limitations. There is no search options, as most of its implementaion is already complete in HydroShare. There is no Animations of new elements being shown or hidden, this is due to time limitations at the time of creation.
+
+If you have any questions, comments, or requests for additional features, please contact me using my Github information.
+
+-Hart Henrichsen
+
+
+# React App Introduction
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
