@@ -2,6 +2,8 @@
 
 This app is created for two purposes. The first as a demo of how the Dynamic components will appear for the proposed HydroShare App Library. The second is to act as a final project for a Web Development class at BYU. This app takes app metadata and automatically displays them. Features include, launching the app on clicking the icon, button to see more or less metadata, automatically generated tages for each app, automatically generated input button when a app accepts hydroshare inputs, and a dynamic form that allows the user to launch the app with user inputed HydroShare inputs.
 
+This app automatically creates a table that displays app metadata and creates links to the host url for each app. The table also automatically create image tags for the correct apps. If the app has HydroShare resource inputs options, a button opens a form that allows the user to launch the app with the inputs. These forms are dynamically created and have between 1 and 7 inputs depending on the link. 
+
 ### The organization of the app goes as follows:
 
 App has one and only one DynamicTable
