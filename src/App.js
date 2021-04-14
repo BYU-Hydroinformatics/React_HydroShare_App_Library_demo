@@ -65,7 +65,6 @@ function TagsDiv(props) {
     );
 }
 
-
 function App() {
     class InputView extends React.Component { //todo: implement
         constructor(props) {
@@ -168,7 +167,7 @@ function App() {
             return (
                 <button onClick={() => {
                     this.setState({showInputs: this.changeShowInputs()})
-                }}><img href="/img/inputs.png" alt="Optional HydroShare inputs. Click to view."/></button>
+                }}><img src="/img/inputs.png" alt="Optional HydroShare inputs. Click to view."/></button>
             );
         }
 
@@ -252,6 +251,13 @@ function App() {
                 <div className="library-app">
                     <h1>Table</h1>
                     <div className='table'>
+                        <div className="entry header">
+                            <b>Icon</b>
+                            <b>Tags</b>
+                            <b>Name</b>
+                            <b>Owner</b>
+                            <b>View Additional</b>
+                        </div>
                         {rows}
                     </div>
                 </div>
@@ -261,6 +267,8 @@ function App() {
     }
 
     return (
+        <div >
+
         <Dynamic_table entries={[
             {
                 'name': 'City Water Model',
@@ -388,6 +396,7 @@ function App() {
             */
         ]} user={'Hart Henrichsen'}
         ></Dynamic_table>
+        </div>
     );
 }
 
