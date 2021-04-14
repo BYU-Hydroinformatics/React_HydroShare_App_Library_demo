@@ -3,10 +3,16 @@ This app is created for two purposes. The first as a demo of how the Dynamic com
 The organization of the app goes as follows:
 
 App has one and only one DynamicTable
+
 DynamicTable has zero or more Entry(s)
-Entry has one and only one ExpandedViwe
+
+Entry has one and only one ExpandedView
+
 Entry has zero or one InputView
+
 Entry has one and only one TagsDiv
+
+
 
 This app is not ment to be a fully functional demo of the proposed HydroShare App library some features do not exist and may never be implemented. First, this is built outside of the HydroShare environment, as I had more experiance with React than Vue at the time of creation and time limitations. There is no search options, as most of its implementaion is already complete in HydroShare. There is no Animations of new elements being shown or hidden, this is due to time limitations at the time of creation.
 
