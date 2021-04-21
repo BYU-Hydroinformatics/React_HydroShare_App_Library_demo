@@ -1,5 +1,11 @@
 import './App.css';
 import React from "react";
+import cuahsi_logo from "./img/cuahsi_logo.png";
+import community_logo from "./img/communities.png";
+import personal_logo from "./img/personal.png";
+import inputs_logo from "./img/inputs.png"
+
+
 
 const url_search = new RegExp(/\${HS_[A-Z]*_[A-Z]*}/g)
 
@@ -46,13 +52,13 @@ function TagsDiv(props) {
     let link;
     let title;
     if (props.image === 'cuahsi') {
-        link = "/img/cuahsi_logo.png";
+        link = cuahsi_logo;
         title = "CUAHSI App"
     } else if (props.image === 'community') {
-        link = "/img/communities.png";
+        link = community_logo;
         title = "Community App"
     } else if (props.image === 'personal') {
-        link = "/img/personal.png";
+        link = personal_logo;
         title = "My Personal App"
     } else {
         console.log("The following image is invalid " + props.image);
@@ -150,7 +156,7 @@ function App() {
             return (
                 <button onClick={() => {
                     this.setState({showInputs: this.changeShowInputs()})
-                }}><img src="/img/inputs.png" alt="Optional HydroShare inputs. Click to view."/></button>
+                }}><img src={inputs_logo} alt="Optional HydroShare inputs. Click to view."/></button>
             );
         }
 
