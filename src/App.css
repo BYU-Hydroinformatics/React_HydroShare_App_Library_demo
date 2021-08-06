@@ -1,3 +1,18 @@
+a {
+    color: #428bca;
+    text-decoration: none;
+    background: transparent;
+}
+
+a:hover, a:focus {
+    color: #2a6496;
+    text-decoration: underline;
+}
+
+a:active, a:hover {
+    outline: 0;
+}
+
 .App {
     text-align: center;
 }
@@ -45,6 +60,9 @@
     overflow: hidden;
     text-align: left;
     min-height: 3em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 
 }
 
@@ -131,9 +149,33 @@ form input{
     min-width: 48px
 }
 
+h1{
+text-align: center;
+    font-weight: 500;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #DDD;
+    font-family: 'Lato', sans-serif;
+    font-size: 30px;
+    line-height: 1.1;
+}
+
 .header{
     grid-template-rows: auto;
     border: 0;
+}
+
+html, body {
+    font-family: 'Roboto', sans-serif;
+    position: relative;
+    height: 100%;
+}
+
+.image{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100%;
+    width: auto;
 }
 
 .image-tags {
@@ -147,7 +189,7 @@ form input{
     max-height: 100%
 }
 img.image-tags-image {
-    padding: 5px;
+
 }
 
 .input-form{
