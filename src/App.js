@@ -168,9 +168,12 @@ function App() {
                 return null;
             }
             return (
-                <button onClick={() => {
-                    this.setState({showInputs: this.changeShowInputs()})
-                }}><img src={inputs_logo} alt="Optional HydroShare inputs. Click to view."/></button>
+                <button className={"btn btn-default"}
+                    /*onClick={() => {this.setState({showInputs: this.changeShowInputs()}) }}*/
+                >
+                    {/*<img src={inputs_logo} alt="Optional HydroShare inputs. Click to view."/>*/}
+                    Run Default
+                </button>
             );
         }
 
@@ -195,7 +198,7 @@ function App() {
                             <TagsDiv image={'personal'} value={this.state.metadata.isPersonalApp}/>
                         </div>
                         <div className="app-name"><a href={""}>{this.state.metadata.name}</a></div>
-                        <div className="app-owner">{this.state.metadata.owner.split('|')[0]}</div>
+                        <div className="app-owner"><a href={""}>{this.state.metadata.owner.split('|')[0]}</a></div>
                         <div className="app-inputs">
                             {this.InputButton()}
                         </div>
@@ -203,8 +206,8 @@ function App() {
                             <b>Abstract: </b>{this.state.metadata.abstract}
                         </div>
                         <div className="app-expand">
-                            <button className="button-expand" onClick={this.changeExpandedState}>
-                                {this.state.expandedState ? 'Close Metadata' : 'View Metadata'}
+                            <button className="btn btn-default button-expand" onClick={this.changeExpandedState}>
+                                {this.state.expandedState ? 'Close' : 'Expand'}
                             </button>
                         </div>
                     </div>

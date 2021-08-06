@@ -106,10 +106,45 @@ a:active, a:hover {
     margin: auto
 }
 
+.btn{
+    box-shadow: 0 1px 0 rgb(255 255 255 / 30%) inset;
+}
+
+.btn:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+
+.btn-default:not(.active) {
+    text-shadow: 1px 1px #fff;
+}
+
+.btn-default {
+    background-color: #eee;
+    background-image: -webkit-linear-gradient(#fcfcfc, #eee);
+    background-image: linear-gradient(#fcfcfc, #eee);
+}
+
+.btn-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+.btn {
+    display: inline-block;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.428571429;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: top;
+    padding: .2em .4em .3em .4em;
+    cursor: pointer;
+}
+
 .button-expand {
-    height: 80%;
     width: 80%;
-    margin: .3em;
     top: 0;
     left: 10%;
     text-align: center;
@@ -124,6 +159,7 @@ a:active, a:hover {
 .entry {
     display: grid;
     text-align: center;
+    font-size: 14px;
     border-left: 1px solid #AAA;
     border-right: 1px solid #AAA;
     border-top: 1px solid #AAA;
