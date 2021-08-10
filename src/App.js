@@ -17,7 +17,6 @@ function ExpandedView(props) {
     if (props.state) {
         return (
             <div className={props.color + ' app-grid-expanded'}>
-                <div className="app-citation"><br/></div>
                 <div><b>Keywords: </b>{props.metadata.keywords}</div>
                 <div><b>Home Page
                     URL: </b><a href={props.metadata.homeUrl}>{props.metadata.homeUrl}</a>
@@ -112,16 +111,10 @@ function App() {
                 <div className="library-app">
                     <img src={header_logo} alt="header" className={"image"}/>
                     <br/>
-                    <h1>App Library Demo</h1>
+                    <h1>HydroShare Web Application Library</h1>
                     <br/>
                     <div className='table'>
-                        <div className="entry header">
-                            <span>Icon</span>
-                            <span>Tags</span>
-                            <span>Name</span>
-                            <span>Owner</span>
-                            <span>View Additional</span>
-                        </div>
+
                         {rows}
                     </div>
                     <img src={footer_logo} alt="footer" className={"image"}/>
