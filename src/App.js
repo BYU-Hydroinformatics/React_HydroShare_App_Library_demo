@@ -195,7 +195,7 @@ function App() {
                         <div className="app-inputs">
                             {this.InputButton()}
                         </div>
-                        <div className="app-abstract">
+                        <div className={this.state.expandedState ? "app-abstract-expanded" : "app-abstract"}>
                             <b>Abstract: </b>{this.state.metadata.abstract}
                         </div>
                         <div className="app-expand">

@@ -66,6 +66,19 @@ a:active, a:hover {
 
 }
 
+.app-abstract-expanded{
+    grid-row-start: 2;
+    grid-row-end: 2;
+    grid-column-start: 1;
+    grid-column-end: 5;
+    overflow: hidden;
+    text-align: left;
+    min-height: 3em;
+    text-overflow: unset;
+    overflow: auto;
+    white-space: normal;
+}
+
 .app-citation{
     grid-column-start:1; grid-column-end: 3;
 }
