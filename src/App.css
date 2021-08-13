@@ -110,7 +110,7 @@ a:active, a:hover {
 .app-inputs {
     grid-column: 5;
     grid-row: 1;
-    margin: auto
+    position: relative;
 }
 
 .app-name {
@@ -144,9 +144,16 @@ a:active, a:hover {
 }
 
 .btn-default {
+    position: absolute;
     color: #333;
     background-color: #fff;
     border-color: #ccc;
+    min-width: 80%;
+    top: 22%;
+    left: 10%;
+    text-align: center;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .btn {
@@ -161,14 +168,8 @@ a:active, a:hover {
     padding: .2em .4em .3em .4em;
     cursor: pointer;
 }
-
-.button-expand {
-    width: 80%;
-    top: 0;
-    left: 10%;
-    text-align: center;
-    max-height: 100%;
-    max-width: 100%;
+.button-expand{
+    top: 9%;
 }
 
 .dark-theme {
@@ -183,13 +184,13 @@ a:active, a:hover {
     border-right: 1px solid #AAA;
     border-top: 1px solid #AAA;
     grid-gap: 1px;
-    row-gap: 12px;
+    row-gap: 1px;
     grid-template-columns:10% 10% auto  20% 15%;
-    grid-template-rows:48px 3em;
+    grid-template-rows:56px 3em;
 }
 
 .expanded {
-    grid-template-rows:48px auto;
+    grid-template-rows:56px auto;
 }
 
 form input{
@@ -201,7 +202,7 @@ form input{
     grid-column: 1;
     grid-row: 1;
     margin: auto;
-    min-width: 48px
+    min-width: 56px
 }
 
 h1{

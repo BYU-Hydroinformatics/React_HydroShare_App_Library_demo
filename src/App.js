@@ -165,7 +165,7 @@ function App() {
                     /*onClick={() => {this.setState({showInputs: this.changeShowInputs()}) }}*/
                 >
                     {/*<img src={inputs_logo} alt="Optional HydroShare inputs. Click to view."/>*/}
-                    Run Default
+                    Run Demo
                 </button>
             );
         }
