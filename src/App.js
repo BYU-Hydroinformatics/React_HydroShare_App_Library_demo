@@ -3,7 +3,7 @@ import React from "react";
 import cuahsi_logo from "./img/cuahsi_logo.png";
 import community_logo from "./img/communities.png";
 import personal_logo from "./img/personal.png";
-import inputs_logo from "./img/inputs.png";
+//import inputs_logo from "./img/inputs.png";
 import footer_logo from "./img/footer.png";
 import header_logo from "./img/header.png";
 
@@ -77,6 +77,78 @@ function TagsDiv(props) {
 
 function App() {
 
+    class SearchFilter extends React.Component{
+        constructor(props) {
+            super(props);
+            this.state= {
+                searchString:"",
+                checkboxIds:["checkboxMy","checkboxCUAHSI","checkboxCommunity"],
+                checkboxMy:true,
+                checkboxCUAHSI:true,
+                checkboxCommunity:true,
+            };
+            this.boxOnChange=this.boxOnChange.bind(this);
+            this.searchOnChange=this.searchOnChange.bind(this);
+        }
+        boxOnChange(event){
+            const target = event.target;
+            const value = target.type === 'checkbox' ? target.checked : target.value;
+            const name = target.name;
+
+            this.setState({
+                [name]: value
+            });
+        }
+        searchOnChange(event){
+            this.setState({searchString: event.target.value});
+        }
+        render() {
+            return (
+                <div className="search-box">
+                    Search: <input type="text"
+                           id="search-box"
+                           defaultValue={this.state.searchString}
+                           onChange={this.searchOnChange}
+                    />
+                    <br/>
+                    <input
+                        type="checkbox"
+                        id={this.state.checkboxIds[0]}
+                        class="form-check-input"
+                        name={this.state.checkboxIds[0]}
+                        onChange={this.boxOnChange}
+                        checked={this.state.checkboxMy}
+                    />
+                    <label className="form-check-label" htmlFor="flexCheckDefault">
+                        My Apps
+                    </label>
+                    <input
+                        type="checkbox"
+                        id={this.state.checkboxIds[1]}
+                        class="form-check-input"
+                        name={this.state.checkboxIds[1]}
+                        onChange={this.boxOnChange}
+                        checked={this.state.checkboxCUAHSI}
+                    />
+                    <label className="form-check-label" htmlFor="flexCheckDefault">
+                        CUAHSI Endorsed Apps
+                </label>
+                    <input
+                        type="checkbox"
+                        id={this.state.checkboxIds[2]}
+                        class="form-check-input"
+                        name={this.state.checkboxIds[2]}
+                        onChange={this.boxOnChange}
+                        checked={this.state.checkboxCommunity}
+                    />
+                    <label className="form-check-label" htmlFor="flexCheckDefault">
+                        Community Apps
+                    </label>
+                </div>
+            )
+        }
+    }
+
     class DynamicTable extends React.Component {
         constructor(props) {
             super(props);
@@ -113,6 +185,7 @@ function App() {
                     <br/>
                     <h1>HydroShare Web Application Library</h1>
                     <br/>
+                    <SearchFilter />
                     <div className='table'>
 
                         {rows}
@@ -190,8 +263,8 @@ function App() {
                             <TagsDiv image={'community'} value={this.state.metadata.isCommunityApp}/>
                             <TagsDiv image={'personal'} value={this.state.metadata.isPersonalApp}/>
                         </div>
-                        <div className="app-name"><a href={""}>{this.state.metadata.name}</a></div>
-                        <div className="app-owner"><a href={""}>{this.state.metadata.owner.split('|')[0]}</a></div>
+                        <div className="app-name"><a href="">{this.state.metadata.name}</a></div>
+                        <div className="app-owner"><a href="">{this.state.metadata.owner.split('|')[0]}</a></div>
                         <div className="app-inputs">
                             {this.InputButton()}
                         </div>

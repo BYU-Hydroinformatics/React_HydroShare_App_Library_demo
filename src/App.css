@@ -268,6 +268,15 @@ img.image-tags-image {
 .light-theme {
     background-color: #ffffff;
 }
+.search-box{
+    text-align: center;
+    line-height: 150%;
+    margin-bottom: .5em;
+}
+.form-check-input{
+    margin-left: 1em;
+    margin-right: .25em;
+}
 
 .table {
     position: relative;
