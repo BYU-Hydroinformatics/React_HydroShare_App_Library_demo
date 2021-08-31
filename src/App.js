@@ -104,28 +104,29 @@ function App() {
         }
         render() {
             return (
-                <div className="search-box">
-                    Search: <input type="text"
+                <div className="search-box form-group">
+                    <input type="text"
                            id="search-box"
                            defaultValue={this.state.searchString}
                            onChange={this.searchOnChange}
+                           placeholder="Search all Public and Discoverable Web Applications"
                     />
                     <br/>
                     <input
                         type="checkbox"
                         id={this.state.checkboxIds[0]}
-                        class="form-check-input"
+                        className="form-check-input form-check-inline"
                         name={this.state.checkboxIds[0]}
                         onChange={this.boxOnChange}
                         checked={this.state.checkboxMy}
                     />
-                    <label className="form-check-label" htmlFor="flexCheckDefault">
+                    <label className="form-check-label form-check-inline" htmlFor="flexCheckDefault">
                         My Apps
                     </label>
                     <input
                         type="checkbox"
                         id={this.state.checkboxIds[1]}
-                        class="form-check-input"
+                        className="form-check-input form-check-inline"
                         name={this.state.checkboxIds[1]}
                         onChange={this.boxOnChange}
                         checked={this.state.checkboxCUAHSI}
@@ -136,7 +137,7 @@ function App() {
                     <input
                         type="checkbox"
                         id={this.state.checkboxIds[2]}
-                        class="form-check-input"
+                        className="form-check-input"
                         name={this.state.checkboxIds[2]}
                         onChange={this.boxOnChange}
                         checked={this.state.checkboxCommunity}
@@ -187,9 +188,13 @@ function App() {
                     <br/>
                     <SearchFilter />
                     <div className='table'>
-
                         {rows}
                     </div>
+                    <div className="infinite-scroll" >
+                        <button type="button" placeholder="Load More" className="load-more btn-default">Load More</button>
+                    </div>
+                    <br/>
+                    <br/>
                     <img src={footer_logo} alt="footer" className={"image"}/>
                 </div>
             );
@@ -246,7 +251,7 @@ function App() {
 
         render() {
             return (
-                <div>
+                <div className="full-entry">
                     <div
                         className={this.state.expandedState ? this.state.color + " entry expanded" : this.state.color + " entry"}>
                         <div className='grid-1-1'>
@@ -355,7 +360,6 @@ function App() {
 
     return (
         <div>
-
             <DynamicTable entries={[
                 {
                     'name': 'City Water Model',
