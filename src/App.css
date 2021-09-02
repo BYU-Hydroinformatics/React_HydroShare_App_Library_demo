@@ -312,8 +312,6 @@ html, body {
     left: 10%;
     display: flex;
     flex-direction: column;
-}
-.table:last-child{
-    padding-bottom: 1px;
-    border-bottom: 1px solid #f10000;
+    padding-bottom: 0px;
+    border-bottom: 1px solid #AAA;
 }
