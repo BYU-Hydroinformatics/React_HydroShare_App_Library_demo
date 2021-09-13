@@ -278,8 +278,7 @@ function App() {
                                 <input type="image"
                                        src={this.state.metadata.icon}
                                        alt={this.state.metadata.name}
-                                       width="48"
-                                       height="48"/>
+                                       />
                             </a>
                         </div>
                         <div className="image-tags">

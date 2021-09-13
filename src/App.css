@@ -55,7 +55,7 @@ a:active, a:hover {
 .app-abstract, .app-abstract-expanded{
     grid-row-start: 2;
     grid-row-end: 2;
-    grid-column-start: 1;
+    grid-column-start: 2;
     grid-column-end: 5;
     overflow: hidden;
     text-align: left;
@@ -188,11 +188,11 @@ body, html{
     grid-gap: 1px;
     row-gap: 1px;
     grid-template-columns:10% 10% auto  20% 15%;
-    grid-template-rows:56px 3em;
+    grid-template-rows:4em 3em;
 }
 
 .expanded {
-    grid-template-rows:56px auto;
+    grid-template-rows:4em auto;
 }
 
 form input{
@@ -206,11 +206,22 @@ form input{
 }
 
 
-.grid1-1 {
-    grid-column: 1;
-    grid-row: 1;
-    margin: auto;
-    min-width: 56px
+.grid-1-1 {
+    grid-row-start: 1;
+    grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: .25em;
+    min-width: 56px;
+    max-width: 100%;
+    max-height: 7em;
+    padding: 0px !important;
+}
+.grid-1-1 input{
+    max-height: 6.75em;
+    max-width: 100%;
 }
 
 h1{
