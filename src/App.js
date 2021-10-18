@@ -30,7 +30,7 @@ function ExpandedView(props) {
                     Pattern: </b>{props.metadata.appLaunchingResourceUrlPattern}
                 </div>
                 <div><b>Supported Aggregation Types: </b>{props.metadata.aggregationTypes}</div>
-                <div><b>Supported File Extensions: </b>{props.metadata.fileExtentions}</div>
+                <div><b>Supported File Extensions: </b>{props.metadata.fileExtensions}</div>
                 <div><b>Source Code URL: </b><a
                     href={props.metadata.sourceUrl}>{props.metadata.sourceUrl}</a></div>
                 <div><b>Help Page URL: </b><a
@@ -405,7 +405,7 @@ function App() {
                     'lastUpdateDate': 'Dec 05, 2019 at 4:47 a.m.',
                     'supportedResourceTypes': 'Generic, Composite Resource',
                     'aggregationTypes': null,
-                    'fileExtentions': null,
+                    'fileExtensions': null,
                     'helpUrl': null,
                     'mailUrl': null,
                     'issueUrl': null,
@@ -429,7 +429,7 @@ function App() {
                     'lastUpdateDate': 'Dec 07, 2017 at 3:46 p.m.',
                     'supportedResourceTypes': null,
                     'aggregationTypes': null,
-                    'fileExtentions': null,
+                    'fileExtensions': null
                     'helpUrl': null,
                     'mailUrl': null,
                     'issueUrl': null,
@@ -451,7 +451,7 @@ function App() {
                     'lastUpdateDate': 'Apr 07, 2021 at 6:24 p.m.',
                     'supportedResourceTypes': 'Composite Resource',
                     'aggregationTypes': 'Multidimensional Content: A multidimensional dataset represented by a NetCDF file (.nc) and text file giving its NetCDF header content',
-                    'fileExtentions': '.nc',
+                    'fileExtensions': '.nc',
                     'helpUrl': null,
                     'mailUrl': null,
                     'issueUrl': null,
@@ -473,7 +473,7 @@ function App() {
                     'lastUpdateDate': 'Aug 15, 2018 at 8:56 p.m.',
                     'supportedResourceTypes': null,
                     'aggregationTypes': null,
-                    'fileExtentions': null,
+                    'fileExtensions': null,
                     'helpUrl': null,
                     'mailUrl': null,
                     'issueUrl': null,
@@ -495,7 +495,7 @@ function App() {
                     'lastUpdateDate': 'Apr 17, 2020 at 4:16 p.m.',
                     'supportedResourceTypes': 'SWAT Model Instance Resource',
                     'aggregationTypes': null,
-                    'fileExtentions': null,
+                    'fileExtensions': null,
                     'helpUrl': null,
                     'mailUrl': null,
                     'issueUrl': null,
@@ -518,7 +518,7 @@ function App() {
                     'lastUpdateDate': 'Mar 09, 2021 at 11:01 p.m.',
                     'supportedResourceTypes': null,
                     'aggregationTypes': null,
-                    'fileExtentions': '.ipynb',
+                    'fileExtensions': '.ipynb',
                     'helpUrl': null,
                     'mailUrl': null,
                     'issueUrl': null,
@@ -540,7 +540,7 @@ function App() {
                     'lastUpdateDate': 'Apr 09, 2021 at 11:28 p.m.',
                     'supportedResourceTypes': 'Composite Resource',
                     'aggregationTypes': 'Multidimensional Content: A multidimensional dataset represented by a NetCDF file (.nc) and text file giving its NetCDF header content',
-                    'fileExtentions': '.nc',
+                    'fileExtensions': '.nc',
                     'helpUrl': null,
                     'mailUrl': null,
                     'issueUrl': null,
@@ -566,7 +566,7 @@ function App() {
                     'lastUpdateDate': 'Feb 17, 2021 at 8:20 p.m.',
                     'supportedResourceTypes': 'Geographic Feature (ESRI Shapefiles), Geographic Raster, Generic, Multidimensional (NetCDF), SWAT Model Instance Resource, HIS Referenced Time Series, Time Series, Script Resource, Model Program Resource, Model Instance Resource, Collection Resource, MODFLOW Model Instance Resource, Composite Resource',
                     'aggregationTypes': 'Multidimensional Content: A multidimensional dataset represented by a NetCDF file (.nc) and text file giving its NetCDF header content, Referenced Time Series Content: A reference to one or more time series served from HydroServers outside of HydroShare in WaterML format, Time Series Content: One or more time series held in an ODM2 format SQLite file and optional source comma separated (.csv) files, Single File Content: A single file with file specific metadata, Geographic Raster Content: A geographic grid represented by a virtual raster tile (.vrt) file and one or more geotiff (.tif) files, Geographic Feature Content: The multiple files that are part of a geographic shapefile, File Set Content: One or more files with specific metadata',
-                    'fileExtentions': '.ipynb',
+                    'fileExtensions': '.ipynb',
                     'helpUrl': false,
                     'mailUrl': false,
                     'issueUrl': null,
@@ -588,7 +588,7 @@ function App() {
                     'lastUpdateDate':'dates'[1]['start_date'], #need to verify that 'dates'[1]['type']='modified' #Not Always true
                     'supportedResourceTypes':'supported_resource_types'['supported_res_types'],
                     'aggregationTypes':supported_aggregation_types[supported_agg_types']['description'],
-                    'fileExtentions':'supported_file_extensions'['value'],
+                    'fileExtensions':'supported_file_extensions'['value'],
                     'helpUrl':'help_page_url',
                     'mailUrl':'mailing_list_url',
                     'issueUrl':'issues_page_url',
