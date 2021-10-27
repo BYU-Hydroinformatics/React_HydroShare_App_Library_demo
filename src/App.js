@@ -11,7 +11,9 @@ import header_logo from "./img/header.png";
 const webapp_resources = [{'short_id': '3fb11de2432e46aaacd70499fd680e6d'}, {'short_id': '6946805f095e46f495b6ab1c6dc064b5'}, {'short_id': '9e860803f84940358a4dd0e563a96572'}, {'short_id': 'f5c46b72d49b4019972716a82355f7bd'}, {'short_id': '56d20d162e904deb8cc2f472f3dbb723'}, {'short_id': 'd858daeab3214e00909bcd87052eb919'}, {'short_id': '4cfd280e8eb747169b293aec2862d4f5'}, {'short_id': '33c45575b95f45c4bf7335faab67ed36'}]
 //This is a temporary variable that exists in hydroshare of cuahsi approved web apps
 
-const url_search = new RegExp(/\${HS_[A-Z]*_[A-Z]*}/g)
+const url_search = new RegExp(/\${HS_[A-Z]*_[A-Z]*}/g);
+const defaultMaxInputs=10;
+const increaseMaxInputStepSize=10;
 
 let ajax = function (url, successCallback, failureCallback){
     fetch(url)
@@ -98,18 +100,26 @@ function TagsDiv(props) {
 
 function App() {
 
-    class SearchFilter extends React.Component {
+    class DynamicTable extends React.Component {
         constructor(props) {
             super(props);
             this.state = {
+                entries: props.entries,
+                currentUser: props.user,
+                ids: [],
                 searchString: "",
                 checkboxIds: ["checkboxMy", "checkboxCUAHSI", "checkboxCommunity"],
                 checkboxMy: true,
                 checkboxCUAHSI: true,
                 checkboxCommunity: true,
-            };
+                maxInputs:defaultMaxInputs,
+            }
+            webapp_resources.forEach((web_app) => {
+                this.state.ids.push(web_app['short_id'])
+            });
             this.boxOnChange = this.boxOnChange.bind(this);
             this.searchOnChange = this.searchOnChange.bind(this);
+            this.addRows=this.addRows.bind(this);
         }
 
         boxOnChange(event) {
@@ -126,66 +136,9 @@ function App() {
             this.setState({searchString: event.target.value});
         }
 
-        render() {
-            return (
-                <div className="search-box form-group">
-                    <input type="text"
-                           id="search-box"
-                           className="form-control"
-                           defaultValue={this.state.searchString}
-                           onChange={this.searchOnChange}
-                           placeholder={"Search Public and Discoverable Web Applications"}
-                    />
-                    <br/>
-                    <input
-                        type="checkbox"
-                        id={this.state.checkboxIds[0]}
-                        className="form-check-input"
-                        name={this.state.checkboxIds[0]}
-                        onChange={this.boxOnChange}
-                        checked={this.state.checkboxMy}
-                    />
-                    <label className="form-check-label form-check-inline" htmlFor="flexCheckDefault">
-                        My Apps
-                    </label>
-                    <input
-                        type="checkbox"
-                        id={this.state.checkboxIds[1]}
-                        className="form-check-input"
-                        name={this.state.checkboxIds[1]}
-                        onChange={this.boxOnChange}
-                        checked={this.state.checkboxCUAHSI}
-                    />
-                    <label className="form-check-label form-check-inline" htmlFor="flexCheckDefault">
-                        CUAHSI Endorsed Apps
-                    </label>
-                    <input
-                        type="checkbox"
-                        id={this.state.checkboxIds[2]}
-                        className="form-check-input"
-                        name={this.state.checkboxIds[2]}
-                        onChange={this.boxOnChange}
-                        checked={this.state.checkboxCommunity}
-                    />
-                    <label className="form-check-label form-check-inline" htmlFor="flexCheckDefault">
-                        Community Apps
-                    </label>
-                </div>
-            )
-        }
-    }
-
-    class DynamicTable extends React.Component {
-        constructor(props) {
-            super(props);
-            this.state = {
-                entries: props.entries,
-                currentUser: props.user,
-                ids: []
-            }
-            webapp_resources.forEach((web_app) => {
-                this.state.ids.push(web_app['short_id'])
-            });
+        addRows(){
+            let newMax=this.state.maxInputs+increaseMaxInputStepSize
+            this.setState({maxInputs: newMax});
         }
 
 
@@ -194,30 +147,27 @@ function App() {
             const rows = [];
             let counter = 1;
             this.state.entries.forEach((currentEntry) => {
+                loop1:
                 currentEntry.isPersonalApp = currentEntry.owner.includes(this.state.currentUser);
                 currentEntry.isCuahsiApp = this.state.ids.includes(currentEntry.short_id);
                 currentEntry.isCommunityApp = !(currentEntry.isCuahsiApp || currentEntry.isPersonalApp);
-                let CommunityChecked = true; //todo: make dynamic by connect to filter checkboxes
-                let CUAHSIChecked = true;
-                let PersonalChecked = false;
-                if (((CommunityChecked && currentEntry.isCommunityApp) || (CUAHSIChecked && currentEntry.isCuahsiApp) || (PersonalChecked && currentEntry.isPersonalApp))) {
+                let add_entry = false
+                if (((this.state.checkboxCommunity && currentEntry.isCommunityApp) || (this.state.checkboxCUAHSI && currentEntry.isCuahsiApp) || (this.state.checkboxMy && currentEntry.isPersonalApp))) {
                     let searchable_array = Object.values(currentEntry)
-                    let search_value = "" //todo: make dynamic by connect to filter textbox
-                    let add_entry = false
                     searchable_array.forEach((meta) => {
                         loop2:
-                            if (meta !== null && meta.type !== Boolean && meta.toString().includes(search_value)) {
+                            if (meta !== null && meta.type !== Boolean && meta.toString().includes(this.state.searchString)) {
                                 add_entry = true;
                                 break loop2;
                             }
                     });
-                    if (add_entry) { //todo: add if statement when add searching
+                }
+                    if (add_entry && (counter <= this.state.maxInputs)) {
                         rows.push(
                             <Entry key={counter} position={counter} metadata={currentEntry}/>
                         )
                         counter += 1;
                     }
-                }
             });
             return (
                 <div className="library-app">
@@ -225,12 +175,54 @@ function App() {
                     <br/>
                     <h1>HydroShare Web Application Library</h1>
                     <br/>
-                    <SearchFilter/>
+                    <div className="search-box form-group">
+                        <input type="text"
+                               id="search-box"
+                               className="form-control"
+                               defaultValue={this.state.searchString}
+                               onChange={this.searchOnChange}
+                               placeholder={"Search Public and Discoverable Web Applications"}
+                        />
+                        <br/>
+                        <input
+                            type="checkbox"
+                            id={this.state.checkboxIds[0]}
+                            className="form-check-input"
+                            name={this.state.checkboxIds[0]}
+                            onChange={this.boxOnChange}
+                            checked={this.state.checkboxMy}
+                        />
+                        <label className="form-check-label form-check-inline" htmlFor="flexCheckDefault">
+                            My Apps
+                        </label>
+                        <input
+                            type="checkbox"
+                            id={this.state.checkboxIds[1]}
+                            className="form-check-input"
+                            name={this.state.checkboxIds[1]}
+                            onChange={this.boxOnChange}
+                            checked={this.state.checkboxCUAHSI}
+                        />
+                        <label className="form-check-label form-check-inline" htmlFor="flexCheckDefault">
+                            CUAHSI Endorsed Apps
+                        </label>
+                        <input
+                            type="checkbox"
+                            id={this.state.checkboxIds[2]}
+                            className="form-check-input"
+                            name={this.state.checkboxIds[2]}
+                            onChange={this.boxOnChange}
+                            checked={this.state.checkboxCommunity}
+                        />
+                        <label className="form-check-label form-check-inline" htmlFor="flexCheckDefault">
+                            Community Apps
+                        </label>
+                    </div>
                     <div className='table'>
                         {rows}
                     </div>
                     <div className="infinite-scroll">
-                        <button type="button" placeholder="Show More" className="load-more btn-default">Load More
+                        <button type="button" placeholder="Show More" className="load-more btn-default" onClick={this.addRows}>Load More
                         </button>
                     </div>
                     <br/>
@@ -450,7 +442,7 @@ function App() {
                     'lastUpdateDate': 'Dec 07, 2017 at 3:46 p.m.',
                     'supportedResourceTypes': null,
                     'aggregationTypes': null,
-                    'fileExtensions': null
+                    'fileExtensions': null,
                     'helpUrl': null,
                     'mailUrl': null,
                     'issueUrl': null,
