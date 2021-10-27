@@ -13,6 +13,27 @@ const webapp_resources = [{'short_id': '3fb11de2432e46aaacd70499fd680e6d'}, {'sh
 
 const url_search = new RegExp(/\${HS_[A-Z]*_[A-Z]*}/g)
 
+let ajax = function (url, successCallback, failureCallback){
+    fetch(url)
+        .then(function (response) {
+            if (response.ok){
+                return response.json()
+            }
+            throw new Error("Network Response was not okay.")
+    })
+        .then(function(data){
+           if(typeof successCallback === "function"){
+               successCallback(data);
+           }
+        })
+        .catch(function (error){
+            console.log("Fetch error: "+error.message);
+            if(typeof failureCallback === "function"){
+                failureCallback()
+            }
+        })
+}
+
 function ExpandedView(props) {
     if (props.state) {
         return (
