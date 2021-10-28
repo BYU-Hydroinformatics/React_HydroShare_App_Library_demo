@@ -79,7 +79,10 @@ a:active, a:hover {
 .app-expand {
     position: relative;
     max-height: 3em;
-
+    grid-column-start: 5;
+    grid-column-end: 6;
+    grid-row-start: 2;
+    grid-row-end: 3;
 }
 
 .app-expanded {
@@ -190,6 +193,13 @@ body, html{
     grid-template-columns:10% 10% auto  20% 15%;
     grid-template-rows:4em 3em;
 }
+.entry.expanded .grid-1-1{
+    vertical-align: top;
+    position: relative;
+    top: 0px;
+    grid-row-end: 2;
+    padding: 2px 0px 0px;
+}
 
 .expanded {
     grid-template-rows:4em auto;
@@ -211,16 +221,16 @@ form input{
     grid-row-end: 3;
     grid-column-start: 1;
     grid-column-end: 2;
-    margin-top: auto;
-    margin-bottom: auto;
     margin-left: .25em;
     min-width: 56px;
     max-width: 100%;
     max-height: 7em;
+    padding: 2px 0px 0px;
+
 }
 .grid-1-1 input{
-    max-height: 6.25em;
-    max-width: 100%;
+    max-height: 6.5em;
+    max-width: 6.5em;
 }
 
 h1{
@@ -346,6 +356,11 @@ input[type=checkbox]:focus{
     padding-bottom: 0px;
     border-bottom: 1px solid #AAA;
 }
-.table>:not(:last-child)>:last-child>.grid-1-1{
-    padding: 0px;
+
+.table>:not(caption)>*>*.grid-1-1{
+    padding: 2px 0px 0px;
+}
+
+.table>:not(caption)>*>*.grid-1-1.expanded{
+    padding: 1px 0px 0px;
 }

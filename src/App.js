@@ -42,7 +42,7 @@ function ExpandedView(props) {
             <div className={props.color + ' app-grid-expanded'}>
                 <div><b>Keywords: </b>{props.metadata.keywords}</div>
                 <div><b>Home Page
-                    URL: </b><a href={props.metadata.homeUrl}>{props.metadata.homeUrl}</a>
+                    URL: </b><a href={props.metadata.homeUrl ? props.metadata.homeUrl : undefined}>{props.metadata.homeUrl}</a>
                 </div>
                 <div><b>Version: </b>{props.version}</div>
                 <div><b>Views: </b>{props.metadata.views}</div>
@@ -55,14 +55,14 @@ function ExpandedView(props) {
                 <div><b>Supported Aggregation Types: </b>{props.metadata.aggregationTypes}</div>
                 <div><b>Supported File Extensions: </b>{props.metadata.fileExtensions}</div>
                 <div><b>Source Code URL: </b><a
-                    href={props.metadata.sourceUrl}>{props.metadata.sourceUrl}</a></div>
+                    href={props.metadata.sourceUrl ? props.metadata.sourceUrl : undefined}>{props.metadata.sourceUrl}</a></div>
                 <div><b>Help Page URL: </b><a
-                    href={props.metadata.helpUrl}>{props.metadata.helpUrl}</a></div>
+                    href={props.metadata.helpUrl ? props.metadata.helpUrl : undefined}>{props.metadata.helpUrl}</a></div>
                 <div><b>Mailing List URL: </b><a
-                    href={props.metadata.mailUrl}>{props.metadata.mailUrl}</a></div>
+                    href={props.metadata.mailUrl ? props.metadata.mailUrl : undefined}>{props.metadata.mailUrl}</a></div>
 
                 <div><b>Issues Page URL: </b><a
-                    href={props.metadata.issueUrl}>{props.metadata.issueUrl}</a></div>
+                    href={props.metadata.issueUrl ? props.metadata.issueUrl : undefined}>{props.metadata.issueUrl}</a></div>
                 <div className="app-citation">
                     <b>Citation: </b> {props.metadata.citation}
                 </div>
