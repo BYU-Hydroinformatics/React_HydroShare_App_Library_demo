@@ -21,6 +21,7 @@ def add_resource(resource_dublin):
     appLaunchingResourceUrlPattern = ''
     keywords = ''
     homeUrl = ''
+    resourceUrl = ''
     fileUrl = ''
     aggregationUrl = ''
     connectorUrl = ''
@@ -41,10 +42,10 @@ def add_resource(resource_dublin):
     copyright = ''
     isCommunityApp = False
     icon = ''
-
     name = resource_dublin['title']
-    if (resource_dublin['app_icon']):
+    if resource_dublin['app_icon']:
         icon = resource_dublin['app_icon']['value']
+    resourceUrl = resource_dublin['identifiers'][0]['url']
     for creator in resource_dublin["creators"]:
         authors += creator["name"] + ", "
         if creator['order'] == 1:
@@ -158,6 +159,7 @@ def add_resource(resource_dublin):
         'sourceCodeUrl': sourceCodeUrl,
         'helpUrl': helpUrl,
         'mailUrl': mailUrl,
+        'resourceUrl': resourceUrl,
         'issueUrl': issueUrl,
         'ownerUrl': ownerUrl,
         'version': version,

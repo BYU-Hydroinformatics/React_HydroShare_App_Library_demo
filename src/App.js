@@ -12,8 +12,8 @@ const webapp_resources = [{'short_id': '3fb11de2432e46aaacd70499fd680e6d'}, {'sh
 //This is a temporary variable that exists in hydroshare of cuahsi approved web apps
 
 const url_search = new RegExp(/\${HS_[A-Z]*_[A-Z]*}/g);
-const defaultMaxInputs=10;
-const increaseMaxInputStepSize=10;
+const defaultMaxInputs = 10;
+const increaseMaxInputStepSize = 10;
 
 /*let ajax = function (url, successCallback, failureCallback){
     fetch(url)
@@ -112,14 +112,14 @@ function App() {
                 checkboxMy: true,
                 checkboxCUAHSI: true,
                 checkboxCommunity: true,
-                maxInputs:defaultMaxInputs,
+                maxInputs: defaultMaxInputs,
             }
             webapp_resources.forEach((web_app) => {
                 this.state.ids.push(web_app['short_id'])
             });
             this.boxOnChange = this.boxOnChange.bind(this);
             this.searchOnChange = this.searchOnChange.bind(this);
-            this.onLoadMore=this.onLoadMore.bind(this);
+            this.onLoadMore = this.onLoadMore.bind(this);
         }
 
         boxOnChange(event) {
@@ -136,8 +136,8 @@ function App() {
             this.setState({searchString: event.target.value});
         }
 
-        onLoadMore(){
-            let newMax=this.state.maxInputs+increaseMaxInputStepSize
+        onLoadMore() {
+            let newMax = this.state.maxInputs + increaseMaxInputStepSize
             this.setState({maxInputs: newMax});
         }
 
@@ -146,28 +146,26 @@ function App() {
             document.title = "HydroShare Demo App Library";
             const rows = [];
             let counter = 1;
-                this.state.entries.forEach((currentEntry) => {
+            this.state.entries.forEach((currentEntry) => {
                 currentEntry.isPersonalApp = currentEntry.owner.includes(this.state.currentUser);
-                currentEntry.isCuahsiApp = this.state.ids.includes(currentEntry.short_id);
+                currentEntry.isCuahsiApp = this.state.ids.includes(currentEntry.resourceUrl.split('/')[4]);
                 currentEntry.isCommunityApp = !(currentEntry.isCuahsiApp || currentEntry.isPersonalApp);
                 let add_entry = false
                 if ((this.state.checkboxCommunity && currentEntry.isCommunityApp) || (this.state.checkboxCUAHSI && currentEntry.isCuahsiApp) || (this.state.checkboxMy && currentEntry.isPersonalApp)) {
                     let searchable_array = Object.values(currentEntry)
-                        searchable_array.forEach((meta) => {
-                            if (meta !== null && meta.type !== Boolean && meta.toString().includes(this.state.searchString)) {
-                                add_entry = true;
-                            }
+                    searchable_array.forEach((meta) => {
+                        if (meta !== null && meta.type !== Boolean && meta.toString().includes(this.state.searchString)) {
+                            add_entry = true;
+                        }
                     });
 
                     if (add_entry && (counter <= this.state.maxInputs)) {
                         rows.push(
                             <Entry key={counter} position={counter} metadata={currentEntry}/>
                         )
-                        console.log(counter);
-
                     }
                 }
-                    counter += 1;
+                counter += 1;
             });
             return (
                 <div className="library-app">
@@ -222,7 +220,8 @@ function App() {
                         {rows}
                     </div>
                     <div className="infinite-scroll">
-                        <button type="button" placeholder="Show More" className="load-more btn-default" onClick={this.onLoadMore}>Load More
+                        <button type="button" placeholder="Show More" className="load-more btn-default"
+                                onClick={this.onLoadMore}>Load More
                         </button>
                     </div>
                     <br/>
@@ -231,7 +230,6 @@ function App() {
                 </div>
             );
         }
-
     }
 
     class Entry extends React.Component {
@@ -283,7 +281,7 @@ function App() {
 
         render() {
             return (
-                <div className="full-entry" id={"App_Entry_#"+this.state.key}>
+                <div className="full-entry" id={"App_Entry_#" + this.state.key}>
                     <div
                         className={this.state.expandedState ? this.state.color + " entry expanded" : this.state.color + " entry"}>
                         <div className='grid-1-1'>
@@ -291,7 +289,7 @@ function App() {
                                 <input type="image"
                                        src={this.state.metadata.icon}
                                        alt={this.state.metadata.name}
-                                       />
+                                />
                             </a>
                         </div>
                         <div className="image-tags">
@@ -299,8 +297,11 @@ function App() {
                             <TagsDiv image={'community'} value={this.state.metadata.isCommunityApp}/>
                             <TagsDiv image={'personal'} value={this.state.metadata.isPersonalApp}/>
                         </div>
-                        <div className="app-name"><a href="">{this.state.metadata.name}</a></div>
-                        <div className="app-owner"><a href="">{this.state.metadata.owner.split('|')[0]}</a></div>
+                        <div className="app-name"><a href={this.state.metadata.resourceUrl} target="_blank"
+                                                     rel='noreferrer'>{this.state.metadata.name}</a></div>
+                        <div className="app-owner"><a
+                            href={"https://www.hydroshare.org/" + this.state.metadata.ownerUrl} target="_blank"
+                            rel='noreferrer'>{this.state.metadata.owner.split('|')[0]}</a></div>
                         <div className="app-inputs">
                             {this.InputButton()}
                         </div>
@@ -395,6 +396,8 @@ function App() {
                 {
                     'name': 'City Water Model',
                     'owner': 'Hart Henrichsen',
+                    'ownerUrl': '/user/1001',
+                    'resourceUrl': 'https://www.hydroshare.org/resource/b2697235ef6746d3963775399f092c4f/',
                     'abstract': 'This is some code I made over the weekend. It is not done yet, but will be really cool.',
                     'short_id': 'd8e7873da67e4d8e89d94e314585f6bc',
                     'isCommunityApp': false,
@@ -405,8 +408,10 @@ function App() {
                 {
                     'name': 'HydroShare Pangeo',
                     'short_id': 'ed9ede792fc74856ba77aebf9443981f',
+                    'resourceUrl': 'https://www.hydroshare.org/resource/ed9ede792fc74856ba77aebf9443981f/',
                     'isCommunityApp': false,
-                    'owner': 'Bart Nijssen | Christina Bandaragoda',
+                    'owner': 'Bart Nijssen',
+                    'ownerUrl': '/user/1005',
                     'appLaunchingResourceUrlPattern': 'http://hydro.pangeo.io',
                     'abstract': 'The HydroShare Web App provides easy access to a containerized version of SUMMA as part of the NSF-funded Pangeo project. Pangeo uses docker images that contain SUMMA and pysumma and that allow SUMMA to be run from within Jupyter notebooks. The Pangeo instance enables SUMMA to be used in commercial cloud environments as well as for graduate education. [ Link to snow modeling course taught by Dr. Jessica Lundquist at the University of Washington as part of CUAHSI’s Virtual University in (Fall 2018; Fall 2019: Snow Hydrology and Modeling). Link to graduate course taught by Bart Nijssen at the University of Washington in Spring 2019 (CEWA 564 Advanced Hydrology).]\n' +
                         '\n',
@@ -428,9 +433,10 @@ function App() {
                 },
                 {
                     'name': 'Data Rods Explorer',
-                    'short_id': '9e860803f84940358a4dd0e563a96572',
+                    'resourceUrl': 'https://www.hydroshare.org/resource/9e860803f84940358a4dd0e563a96572/',
                     'isCommunityApp': false,
                     'owner': 'Zhiyu/Drew Li',
+                    'ownerUrl': '/user/3',
                     'appLaunchingResourceUrlPattern': null,
                     'abstract': 'The Data Rods Explorer (DRE) is a web client app that enables users to browse several NASA-hosted data sets. The interface enables visualization and download of NASA observation retrievals and land surface model (LSM) outputs by variable, space and time. The key variables are precipitation, wind, temperature, surface downward radiation flux, heat flux, humidity, soil moisture, groundwater, runoff, and evapotranspiration. These variables describe the main components of the water cycle over land masses.\n' +
                         '\n',
@@ -451,9 +457,10 @@ function App() {
                 },
                 {
                     'name': 'OPeNDAP (Hyrax)',
-                    'short_id': 'f5c46b72d49b4019972716a82355f7bd',
+                    'resourceUrl': 'https://www.hydroshare.org/resource/f5c46b72d49b4019972716a82355f7bd/',
                     'isCommunityApp': true,
-                    'owner': 'David Tarboton | Hong Yi | Tian Gan | Michael J. Stealey',
+                    'owner': 'David Tarboton',
+                    'ownerUrl': '/user/13',
                     'appLaunchingResourceUrlPattern': 'http://hyrax.hydroshare.org/opendap/${HS_RES_ID}/data/contents/',
                     'abstract': 'This is the web app connector for the OPeNDAP service for content aggregations within Composite resources in HydroShare. The OPeNDAP service is available only for the "Public" composite resources. Due to current Hyrax deployment limitations this does not work for large NetCDF files. Exact upper limit unknown, but has been tested up to 200 MB successfully.',
                     'keywords': 'OPeNDAP, Multidimensional Space-time Data, NetCDF',
@@ -473,9 +480,10 @@ function App() {
                 },
                 {
                     'name': 'GRACE Data Viewer',
-                    'short_id': '7bccb6b1ffac46e389802e90d4fa2c42',
+                    'resourceUrl': 'https://www.hydroshare.org/resource/7bccb6b1ffac46e389802e90d4fa2c42/',
                     'isCommunityApp': false,
                     'owner': 'Norm Jones',
+                    'ownerUrl': '/user/1001',
                     'appLaunchingResourceUrlPattern': 'https://tethys.byu.edu/apps/newgrace/',
                     'abstract': 'Since 2002, NASA’s GRACE Satellite mission has allowed scientists of various disciplines to analyze and map the changes in Earth’s total water storage on a global scale. Although the raw data is available to the public, the process of viewing, manipulating, and analyzing the GRACE data can be tedious and difficult for those without strong technological backgrounds in programming or other related fields. The GRACE web app helps bridge the technical gap for decision makers by providing a user interface to visualize (in both map and time series format), not only the data collected from the GRACE mission, but the individual components of water storage as well. Using the GLDAS Land Surface model, the application allows the user to isolate and identify the changes in surface water and groundwater storage that makeup the total water storage quantities measured by the raw GRACE data. The application also includes the capability to upload a custom shapefile in order to perform a regional analysis of these changes allowing decision makers to aggregate and analyze the change in groundwater, surface water, and total water storage within their own personal regions of interest',
                     'keywords': 'NASA, GRACE, Groundwater',
@@ -495,9 +503,10 @@ function App() {
                 },
                 {
                     'name': 'SWATShare',
-                    'short_id': '3fb11de2432e46aaacd70499fd680e6d',
+                    'resourceUrl': 'https://www.hydroshare.org/resource/3fb11de2432e46aaacd70499fd680e6d/',
                     'isCommunityApp': false,
                     'owner': 'I Luk Kim',
+                    'ownerUrl': '/user/1001',
                     'appLaunchingResourceUrlPattern': 'https://mygeohub.org/groups/water-hub/swatshare?source=hs&res_id=${HS_RES_ID}',
                     'abstract': 'SWATShare Web App for exploring HydroShare resource',
                     'keywords': 'SWATShare',
@@ -517,9 +526,10 @@ function App() {
                 },
                 {
                     'name': 'CJW-k8s-test-js-169-80',
-                    'short_id': 'a0f43586759e462e9956a2e0361fc887',
+                    'resourceUrl': 'https://www.hydroshare.org/resource/a0f43586759e462e9956a2e0361fc887/',
                     'isCommunityApp': false,
                     'owner': 'Zhiyu (Drew) Li',
+                    'ownerUrl': '/user/1001',
                     'appLaunchingResourceUrlPattern': 'http://js-169-80.jetstream-cloud.org/hub/spawn?next=/user-redirect/hs-pull?id=${HS_RES_ID}%26subfolder%3DDownloads',
                     'abstract': 'CJW K8s test\n' +
                         'http://js-169-80.jetstream-cloud.org/',
@@ -540,9 +550,10 @@ function App() {
                 },
                 {
                     'name': 'THREDDS',
-                    'short_id': '70070fa1b382496e85ca44894683b15d',
+                    'resourceUrl': 'https://www.hydroshare.org/resource/70070fa1b382496e85ca44894683b15d/',
                     'isCommunityApp': true,
-                    'owner': 'Anthony M. Castronova | Martin Seul | Hong Yi | David Tarboton | Chris Calloway',
+                    'owner': 'Anthony M. Castronova',
+                    'ownerUrl': '/user/1001',
                     'appLaunchingResourceUrlPattern': 'https://thredds.hydroshare.org/thredds/catalog/hydroshare/resources/${HS_RES_ID}/data/contents/catalog.html',
                     'abstract': 'This is the web app connector for the HydroShare THREDDS (Thematic Real-time Environmental Distributed Data Services) server for content aggregations within Composite resources in HydroShare. The THREDDS service is available only for the "Public" composite resources. This THREDDS server supports access to netCDF data through OPeNDAP using the DAP2 protcol. This connects to a CUAHSI deployment of the UCAR Unidata THREDDS server https://www.unidata.ucar.edu/software/tds/current/TDS.html.',
                     'keywords': 'Multidimensional Space-time Data, THREDDS, NetCDF, OPeNDAP',
@@ -562,8 +573,9 @@ function App() {
                 },
                 {
                     'name': 'CyberGIS-Jupyter for Water',
-                    'short_id': '4cfd280e8eb747169b293aec2862d4f5',
+                    'resourceUrl': 'https://www.hydroshare.org/resource/4cfd280e8eb747169b293aec2862d4f5/',
                     'isCommunityApp': true,
+                    'ownerUrl': '/user/1001',
                     'owner': 'Shaowen Wang | Anand Padmanabhan | Fangzheng Lu | Zhiyu/Drew Li',
                     'appLaunchingResourceUrlPattern': 'https://go.illinois.edu/cybergis-jupyter-water/hub/spawn?next=/user-redirect/hs-pull?id=${HS_RES_ID}%26subfolder%3DDownloads',
                     'abstract': 'The CyberGIS-Jupyter for Water (CJW) platform aims to advance community hydrologic modelling, and support data-intensive, reproducible, and computationally scalable water science research by simplifying access to advanced cyberGIS and cyberinfrastructure capabilities through a friendly Jupyter Notebook environment. The current release has specific support for the Structure For Unifying Multiple Modeling Alternatives (SUMMA) model and the WRFHydro model.\n' +
@@ -589,7 +601,9 @@ function App() {
                 /*
                     'name':->'title',
                     'short_id':'short_id'
-                    'owner':'creators'['order'= 0]['name'], # loop through order
+                    'owner':'creators'['order'= 1]['name'], # loop through order
+                    'ownerUrl': ,
+                    ;resourceUrl':,
                     'appLaunchingResourceUrlPattern':'url_base_aggregation'['value'],
                     'appLaunchingFileUrlPattern':'url_base_file'['value'],
                     'abstract':'description',
