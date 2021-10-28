@@ -15,7 +15,7 @@ const url_search = new RegExp(/\${HS_[A-Z]*_[A-Z]*}/g);
 const defaultMaxInputs=10;
 const increaseMaxInputStepSize=10;
 
-let ajax = function (url, successCallback, failureCallback){
+/*let ajax = function (url, successCallback, failureCallback){
     fetch(url)
         .then(function (response) {
             if (response.ok){
@@ -34,7 +34,7 @@ let ajax = function (url, successCallback, failureCallback){
                 failureCallback()
             }
         })
-}
+}*/
 
 function ExpandedView(props) {
     if (props.state) {
@@ -119,7 +119,7 @@ function App() {
             });
             this.boxOnChange = this.boxOnChange.bind(this);
             this.searchOnChange = this.searchOnChange.bind(this);
-            this.addRows=this.addRows.bind(this);
+            this.onLoadMore=this.onLoadMore.bind(this);
         }
 
         boxOnChange(event) {
@@ -136,7 +136,7 @@ function App() {
             this.setState({searchString: event.target.value});
         }
 
-        addRows(){
+        onLoadMore(){
             let newMax=this.state.maxInputs+increaseMaxInputStepSize
             this.setState({maxInputs: newMax});
         }
@@ -146,28 +146,28 @@ function App() {
             document.title = "HydroShare Demo App Library";
             const rows = [];
             let counter = 1;
-            this.state.entries.forEach((currentEntry) => {
-                loop1:
+                this.state.entries.forEach((currentEntry) => {
                 currentEntry.isPersonalApp = currentEntry.owner.includes(this.state.currentUser);
                 currentEntry.isCuahsiApp = this.state.ids.includes(currentEntry.short_id);
                 currentEntry.isCommunityApp = !(currentEntry.isCuahsiApp || currentEntry.isPersonalApp);
                 let add_entry = false
-                if (((this.state.checkboxCommunity && currentEntry.isCommunityApp) || (this.state.checkboxCUAHSI && currentEntry.isCuahsiApp) || (this.state.checkboxMy && currentEntry.isPersonalApp))) {
+                if ((this.state.checkboxCommunity && currentEntry.isCommunityApp) || (this.state.checkboxCUAHSI && currentEntry.isCuahsiApp) || (this.state.checkboxMy && currentEntry.isPersonalApp)) {
                     let searchable_array = Object.values(currentEntry)
-                    searchable_array.forEach((meta) => {
-                        loop2:
+                        searchable_array.forEach((meta) => {
                             if (meta !== null && meta.type !== Boolean && meta.toString().includes(this.state.searchString)) {
                                 add_entry = true;
-                                break loop2;
                             }
                     });
-                }
+
                     if (add_entry && (counter <= this.state.maxInputs)) {
                         rows.push(
                             <Entry key={counter} position={counter} metadata={currentEntry}/>
                         )
-                        counter += 1;
+                        console.log(counter);
+
                     }
+                }
+                    counter += 1;
             });
             return (
                 <div className="library-app">
@@ -222,7 +222,7 @@ function App() {
                         {rows}
                     </div>
                     <div className="infinite-scroll">
-                        <button type="button" placeholder="Show More" className="load-more btn-default" onClick={this.addRows}>Load More
+                        <button type="button" placeholder="Show More" className="load-more btn-default" onClick={this.onLoadMore}>Load More
                         </button>
                     </div>
                     <br/>
@@ -283,7 +283,7 @@ function App() {
 
         render() {
             return (
-                <div className="full-entry">
+                <div className="full-entry" id={"App_Entry_#"+this.state.key}>
                     <div
                         className={this.state.expandedState ? this.state.color + " entry expanded" : this.state.color + " entry"}>
                         <div className='grid-1-1'>
