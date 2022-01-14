@@ -15,26 +15,28 @@ const url_search = new RegExp(/\${HS_[A-Z]*_[A-Z]*}/g);
 const defaultMaxInputs = 10;
 const increaseMaxInputStepSize = 10;
 
-/*let ajax = function (url, successCallback, failureCallback){
+
+function loadResources(username="",password=""){
+    /**
+     *  This function authenticates the user with HydroShare and then loads all web app connecters the user hass access to.
+     *  This function is called by the formatResources function
+     */
+    let url="https://www.hydroshare.org/hsapi/resource/?edit_permission=false&published=false&type=ToolResource&include_obsolete=false";
     fetch(url)
-        .then(function (response) {
-            if (response.ok){
-                return response.json()
+        .then(function (response){
+            if(response.ok){
+                return(response.json());
             }
-            throw new Error("Network Response was not okay.")
+            throw new Error("Network response was not okay.");
+        })
+        .then(function (data){
+            console.log(data.results)
+            return(data)
     })
-        .then(function(data){
-           if(typeof successCallback === "function"){
-               successCallback(data);
-           }
-        })
-        .catch(function (error){
-            console.log("Fetch error: "+error.message);
-            if(typeof failureCallback === "function"){
-                failureCallback()
-            }
-        })
-}*/
+}
+
+
+
 
 function ExpandedView(props) {
     if (props.state) {
@@ -99,6 +101,7 @@ function TagsDiv(props) {
 }
 
 function App() {
+    loadResources()  ///////////////////////////////////////////////////////
 
     class DynamicTable extends React.Component {
         constructor(props) {
@@ -285,7 +288,7 @@ function App() {
                     <div
                         className={this.state.expandedState ? this.state.color + " entry expanded" : this.state.color + " entry"}>
                         <div className='grid-1-1'>
-                            <a href={this.state.metadata.homeUrl}>
+                            <a href={this.state.metadata.homeUrl} target="_blank" rel="noreferrer">
                                 <input type="image"
                                        src={this.state.metadata.icon}
                                        alt={this.state.metadata.name}
