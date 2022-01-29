@@ -8,21 +8,22 @@ import footer_logo from "./img/footer.png";
 import header_logo from "./img/header.png";
 
 
-const webapp_resources = [{'short_id': '3fb11de2432e46aaacd70499fd680e6d'}, {'short_id': '6946805f095e46f495b6ab1c6dc064b5'}, {'short_id': '9e860803f84940358a4dd0e563a96572'}, {'short_id': 'f5c46b72d49b4019972716a82355f7bd'}, {'short_id': '56d20d162e904deb8cc2f472f3dbb723'}, {'short_id': 'd858daeab3214e00909bcd87052eb919'}, {'short_id': '4cfd280e8eb747169b293aec2862d4f5'}, {'short_id': '33c45575b95f45c4bf7335faab67ed36'}]
+const webapp_resources = [ '3fb11de2432e46aaacd70499fd680e6d','6946805f095e46f495b6ab1c6dc064b5', '9e860803f84940358a4dd0e563a96572', 'd5ac4340c7ff454f9c57dce43da2d625', '56d20d162e904deb8cc2f472f3dbb723', 'd858daeab3214e00909bcd87052eb919' ,'4cfd280e8eb747169b293aec2862d4f5','33c45575b95f45c4bf7335faab67ed36', '70070fa1b382496e85ca44894683b15d']
 //This is a temporary variable that exists in hydroshare of cuahsi approved web apps
 
 const url_search = new RegExp(/\${HS_[A-Z]*_[A-Z]*}/g);
 const defaultMaxInputs = 10;
 const increaseMaxInputStepSize = 10;
 
+const backendUrl= "http://localhost:4000/auth/hydroshare"
+const getResourcesUrl= "https://www.hydroshare.org/hsapi/resource/?edit_permission=false&published=false&type=ToolResource&include_obsolete=false";
 
-function loadResources(username="",password=""){
+function loadResources(){
     /**
-     *  This function authenticates the user with HydroShare and then loads all web app connecters the user hass access to.
-     *  This function is called by the formatResources function
+     *  This function authenticates the user with HydroShare and then loads all web app connectors the user has access to.
      */
-    let url="https://www.hydroshare.org/hsapi/resource/?edit_permission=false&published=false&type=ToolResource&include_obsolete=false";
-    fetch(url)
+
+    fetch(getResourcesUrl)
         .then(function (response){
             if(response.ok){
                 return(response.json());
@@ -30,9 +31,62 @@ function loadResources(username="",password=""){
             throw new Error("Network response was not okay.");
         })
         .then(function (data){
-            console.log(data.results)
-            return(data)
+            //console.log(data.results)
+            addDublin(data.results)
     })
+}
+
+function addDublin(sciMetadata){
+    Promise.all(sciMetadata.map( (resource) =>{
+        let resourceId=resource.resource_id;
+        const url= "https://www.hydroshare.org/hsapi/resource/"+resourceId+"/scimeta/elements/";
+        return fetch(url)
+            .then( function (response){
+                if(response.ok)
+                    return(response.json())
+                throw new Error ("There was an error loading the Dublin metadata for "+resourceId);
+            })
+            .then(function (data){
+                let fullResource= Object.assign({},resource,data);
+                return (fullResource);
+            })
+
+    }))
+        .then((data) =>{
+            console.log(data)
+            console.log(data.length)
+            processMetadata(data)
+        });
+}
+
+function processMetadata(fullMetadata){
+    //todo: finish method
+    fullMetadata.forEach(resource =>{
+        console.log(resource)
+        resource.isCuahsiApp= webapp_resources.includes(resource.resource_id);
+        resource.isPersonalApp= !resource.public;
+        resource.isCommunityApp = !resource.isCuahsiApp && resource.public;
+    })
+}
+
+function getHydroShareUser(){
+    const url = "https://www.hydroshare.org/hsapi/user/";
+    fetch(url)
+        .then (function (response){
+            if(response.ok){
+                return(response.json())
+            }
+            throw new Error("User Not Obtained from HydroShare")
+        })
+        .then (function (data){
+            console.log(data)
+            if(typeof data.id !== 'undefined'){
+                return data.id;
+            }
+            else{
+                return "";
+            }
+        })
 }
 
 
@@ -74,6 +128,17 @@ function ExpandedView(props) {
     return null;
 }
 
+function HydroShareLogin() {
+
+    return(
+        <form action={backendUrl}>
+            <button type="submit" className="login-button">
+                <span className="button-text"> Sign in with HydroShare</span>
+            </button>
+        </form>
+    );
+}
+
 function TagsDiv(props) {
     if (!props.value) {
         return null;
@@ -101,15 +166,14 @@ function TagsDiv(props) {
 }
 
 function App() {
-    loadResources()  ///////////////////////////////////////////////////////
-
+    loadResources()
     class DynamicTable extends React.Component {
         constructor(props) {
             super(props);
             this.state = {
                 entries: props.entries,
                 currentUser: props.user,
-                ids: [],
+                ids: webapp_resources,
                 searchString: "",
                 checkboxIds: ["checkboxMy", "checkboxCUAHSI", "checkboxCommunity"],
                 checkboxMy: true,
@@ -117,9 +181,7 @@ function App() {
                 checkboxCommunity: true,
                 maxInputs: defaultMaxInputs,
             }
-            webapp_resources.forEach((web_app) => {
-                this.state.ids.push(web_app['short_id'])
-            });
+
             this.boxOnChange = this.boxOnChange.bind(this);
             this.searchOnChange = this.searchOnChange.bind(this);
             this.onLoadMore = this.onLoadMore.bind(this);
@@ -150,6 +212,7 @@ function App() {
             const rows = [];
             let counter = 1;
             this.state.entries.forEach((currentEntry) => {
+                //todo: update how apps are organized into tiers. Namely personal apps should include all apps the creator has made as well as all discoverable web apps shared to them.
                 currentEntry.isPersonalApp = currentEntry.owner.includes(this.state.currentUser);
                 currentEntry.isCuahsiApp = this.state.ids.includes(currentEntry.resourceUrl.split('/')[4]);
                 currentEntry.isCommunityApp = !(currentEntry.isCuahsiApp || currentEntry.isPersonalApp);
@@ -393,9 +456,14 @@ function App() {
         }
     }
 
+
+
     return (
         <div>
-            <DynamicTable entries={[
+            <HydroShareLogin />
+            <DynamicTable user={'Hart Henrichsen'}
+                          entries={
+                              [
                 {
                     'name': 'City Water Model',
                     'owner': 'Hart Henrichsen',
@@ -664,7 +732,8 @@ function App() {
                     'source_code_url':
                     'issues_page_url':
                  */
-            ]} user={'Hart Henrichsen'}
+            ]
+                          }
             />
         </div>
     );
