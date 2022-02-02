@@ -61,7 +61,7 @@ function addDublin(sciMetadata){
 function processMetadata(fullMetadata){
     //todo: finish method
     fullMetadata.forEach(resource =>{
-        //console.log(resource)
+        console.log(resource)
 
         resource.isCuahsiApp= webapp_resources.includes(resource.resource_id);
         resource.isPersonalApp= !resource.public;
@@ -117,8 +117,6 @@ function getHydroShareUser(){
 }
 
 
-
-
 function ExpandedView(props) {
     if (props.state) {
         return (
@@ -137,16 +135,16 @@ function ExpandedView(props) {
                 <div><b>Supported Aggregation Types: </b>{props.metadata.supported_aggregation_types_string}</div>
                 <div><b>Supported File Extensions: </b>{props.metadata?.supported_file_extensions?.value}</div>
                 <div><b>Source Code URL: </b><a
-                    href={props.metadata.sourceUrl ? props.metadata.sourceUrl : undefined}>{props.metadata.sourceUrl}</a></div>
+                    href={props.metadata.source_code_url ? props.metadata.source_code_url : undefined} target="_blank">{props.metadata.source_code_url}</a></div>
                 <div><b>Help Page URL: </b><a
-                    href={props.metadata.helpUrl ? props.metadata.helpUrl : undefined}>{props.metadata.helpUrl}</a></div>
+                    href={props.metadata.help_page_url ? props.metadata.help_page_url : undefined} target="_blank">{props.metadata.help_page_url}</a></div>
                 <div><b>Mailing List URL: </b><a
-                    href={props.metadata.mailUrl ? props.metadata.mailUrl : undefined}>{props.metadata.mailUrl}</a></div>
+                    href={props.metadata.mailing_list_url ? props.metadata.mailing_list_url : undefined} target="_blank" >{props.metadata.mailing_list_url}</a></div>
 
                 <div><b>Issues Page URL: </b><a
-                    href={props.metadata.issueUrl ? props.metadata.issueUrl : undefined}>{props.metadata.issueUrl}</a></div>
+                    href={props.metadata.issues_page_url ? props.metadata.issues_page_url : undefined} target="_blank" >{props.metadata.issues_page_url}</a></div>
                 <div className="app-citation">
-                    <b>Citation: </b> {props.metadata.citation}
+                    <b>Copyright: </b> {props.metadata.rights}
                 </div>
             </div>
         );
@@ -507,7 +505,8 @@ function App() {
                     'isCommunityApp': false,
                     'app_home_page_url': {'value':'http://temp'},
                     'url_base_aggregation': {'value':'http://hyrax.hydroshare.org/opendap/${HS_RES_ID}/data/contents/${HS_FILE_PATH}.html'},
-                    'app_icon':{'value': ""}
+                    'app_icon':{'value': ""},
+                    'source_code_url' :'https://google.com',
                 },
                 {
                     'name': 'HydroShare Pangeo',
@@ -528,11 +527,10 @@ function App() {
                     'supported_resource_types_string': 'Generic, Composite Resource',
                     'aggregationTypes': null,
                     'supported_file_extensions': null,
-                    'helpUrl': null,
-                    'mailUrl': null,
-                    'issueUrl': null,
-                    'citation': '\n' +
-                        'Nijssen, B., C. Bandaragoda (2019). HydroShare Pangeo, HydroShare, http://www.hydroshare.org/resource/ed9ede792fc74856ba77aebf9443981f\t\n',
+                    'help_page_url': null,
+                    'mailing_list_url': null,
+                    'issues_page_url': null,
+                    'rights': 'Nijssen, B., C. Bandaragoda (2019). HydroShare Pangeo, HydroShare, http://www.hydroshare.org/resource/ed9ede792fc74856ba77aebf9443981f',
                     'app_icon': {'value': 'https://avatars1.githubusercontent.com/u/23299451?s=200&v=4'}
                 },
                 {
@@ -553,10 +551,10 @@ function App() {
                     'supported_resource_types_string': null,
                     'aggregationTypes': null,
                     'supported_file_extensions': null,
-                    'helpUrl': null,
-                    'mailUrl': null,
-                    'issueUrl': null,
-                    'citation': 'Espinoza, G. E., D. Arctur, UT Austin (2017). Data Rods Explorer App, HydroShare, http://www.hydroshare.org/resource/9e860803f84940358a4dd0e563a96572',
+                    'help_page_url': null,
+                    'mailing_list_url': null,
+                    'issues_page_url': null,
+                    'rights': 'Espinoza, G. E., D. Arctur, UT Austin (2017). Data Rods Explorer App, HydroShare, http://www.hydroshare.org/resource/9e860803f84940358a4dd0e563a96572',
                     'app_icon': {'value':"https://apps.hydroshare.org/static/data_rods_explorer/images/DataRodsExplorer_icon.png"}
                 },
                 {
@@ -576,10 +574,10 @@ function App() {
                     'supported_resource_types_string': 'Composite Resource',
                     'aggregationTypes': 'Multidimensional Content: A multidimensional dataset represented by a NetCDF file (.nc) and text file giving its NetCDF header content',
                     'supported_file_extensions':{'value': '.nc'},
-                    'helpUrl': null,
-                    'mailUrl': null,
-                    'issueUrl': null,
-                    'citation': 'Tarboton, D. (2021). OPeNDAP (Hyrax), HydroShare, http://www.hydroshare.org/resource/f5c46b72d49b4019972716a82355f7bd',
+                    'help_page_url': null,
+                    'mailing_list_url': null,
+                    'issues_page_url': null,
+                    'rights': 'Tarboton, D. (2021). OPeNDAP (Hyrax), HydroShare, http://www.hydroshare.org/resource/f5c46b72d49b4019972716a82355f7bd',
                     'app_icon': {'value': 'https://pbs.twimg.com/profile_images/1003722775058702336/t8-nftfg_400x400.jpg'}
                 },
                 {
@@ -599,10 +597,10 @@ function App() {
                     'supported_resource_types_string': null,
                     'aggregationTypes': null,
                     'supported_file_extensions': null,
-                    'helpUrl': null,
-                    'mailUrl': null,
-                    'issueUrl': null,
-                    'citation': 'McStraw, T. C., S. Pulla, S. Evans, N. Jones, D. Ames, J. Nelson (2018). GRACE Data Viewer, HydroShare, http://www.hydroshare.org/resource/7bccb6b1ffac46e389802e90d4fa2c42',
+                    'help_page_url': null,
+                    'mailing_list_url': null,
+                    'issues_page_url': null,
+                    'rights': 'McStraw, T. C., S. Pulla, S. Evans, N. Jones, D. Ames, J. Nelson (2018). GRACE Data Viewer, HydroShare, http://www.hydroshare.org/resource/7bccb6b1ffac46e389802e90d4fa2c42',
                     'app_icon': {'value': "https://www.hydroshare.org/resource/7da3501f2de2461b9a8c4e593400d019/data/contents/nbviewer.JPG"
                           }
                 },
@@ -623,10 +621,10 @@ function App() {
                     'supported_resource_types_string': 'SWAT Model Instance Resource',
                     'aggregationTypes': null,
                     'supported_file_extensions': null,
-                    'helpUrl': null,
-                    'mailUrl': null,
-                    'issueUrl': null,
-                    'citation': 'Kim, I. L. (2020). SWATShare, HydroShare, http://www.hydroshare.org/resource/3fb11de2432e46aaacd70499fd680e6d',
+                    'help_page_url': null,
+                    'mailing_list_url': null,
+                    'issues_page_url': null,
+                    'rights': 'Kim, I. L. (2020). SWATShare, HydroShare, http://www.hydroshare.org/resource/3fb11de2432e46aaacd70499fd680e6d',
                     'app_icon': {'value':"https://mygeohub.org/groups/water-hub/File:1449835642_magnifier.png" }
                 },
                 {
@@ -647,10 +645,10 @@ function App() {
                     'supported_resource_types_string': null,
                     'aggregationTypes': null,
                     'supported_file_extensions': {'value':'.ipynb'},
-                    'helpUrl': null,
-                    'mailUrl': null,
-                    'issueUrl': null,
-                    'citation': 'Li, Z. (. (2021). CJW-k8s-test-js-169-80, HydroShare, http://www.hydroshare.org/resource/a0f43586759e462e9956a2e0361fc887',
+                    'help_page_url': null,
+                    'mailing_list_url': null,
+                    'issues_page_url': null,
+                    'rights': 'Li, Z. (. (2021). CJW-k8s-test-js-169-80, HydroShare, http://www.hydroshare.org/resource/a0f43586759e462e9956a2e0361fc887',
                     'app_icon': {'value':""}
                 },
                 {
@@ -670,10 +668,10 @@ function App() {
                     'supported_resource_types_string': 'Composite Resource',
                     'aggregationTypes': 'Multidimensional Content: A multidimensional dataset represented by a NetCDF file (.nc) and text file giving its NetCDF header content',
                     'supported_file_extensions': {'value':'.nc'},
-                    'helpUrl': null,
-                    'mailUrl': null,
-                    'issueUrl': null,
-                    'citation': 'Tarboton, D., C. Calloway (2021). THREDDS, HydroShare, http://www.hydroshare.org/resource/70070fa1b382496e85ca44894683b15d',
+                    'help_page_url': null,
+                    'mailing_list_url': null,
+                    'issues_page_url': null,
+                    'rights': 'Tarboton, D., C. Calloway (2021). THREDDS, HydroShare, http://www.hydroshare.org/resource/70070fa1b382496e85ca44894683b15d',
                     'app_icon': {'value':"https://unidata.ucar.edu/images/logos/badges/badge_tds_100.jpg"}
                 },
                 {
@@ -697,10 +695,10 @@ function App() {
                     'supported_resource_types_string': 'Geographic Feature (ESRI Shapefiles), Geographic Raster, Generic, Multidimensional (NetCDF), SWAT Model Instance Resource, HIS Referenced Time Series, Time Series, Script Resource, Model Program Resource, Model Instance Resource, Collection Resource, MODFLOW Model Instance Resource, Composite Resource',
                     'aggregationTypes': 'Multidimensional Content: A multidimensional dataset represented by a NetCDF file (.nc) and text file giving its NetCDF header content, Referenced Time Series Content: A reference to one or more time series served from HydroServers outside of HydroShare in WaterML format, Time Series Content: One or more time series held in an ODM2 format SQLite file and optional source comma separated (.csv) files, Single File Content: A single file with file specific metadata, Geographic Raster Content: A geographic grid represented by a virtual raster tile (.vrt) file and one or more geotiff (.tif) files, Geographic Feature Content: The multiple files that are part of a geographic shapefile, File Set Content: One or more files with specific metadata',
                     'supported_file_extensions': {'value':'.ipynb'},
-                    'helpUrl': false,
-                    'mailUrl': false,
-                    'issueUrl': null,
-                    'citation': 'Li, Z. (., F. Lu, A. Padmanabhan, S. Wang (2021). CyberGIS-Jupyter for Water, HydroShare, http://www.hydroshare.org/resource/4cfd280e8eb747169b293aec2862d4f5',
+                    'help_page_url': "https://github.com",
+                    'mailing_list_url': "https://gmail.com",
+                    'issues_page_url': "https://help.com",
+                    'rights': 'Li, Z. (., F. Lu, A. Padmanabhan, S. Wang (2021). CyberGIS-Jupyter for Water, HydroShare, http://www.hydroshare.org/resource/4cfd280e8eb747169b293aec2862d4f5',
                     'app_icon': {'value':'https://pbs.twimg.com/profile_images/1003722775058702336/t8-nftfg_400x400.jpg'}
                 }
                 /*
@@ -721,9 +719,9 @@ function App() {
                     'supported_resource_types_string':'supported_resource_types'['supported_res_types'],
                     'aggregationTypes':supported_aggregation_types[supported_agg_types']['description'],
                     'supported_file_extensions':'supported_file_extensions'['value'],
-                    'helpUrl':'help_page_url',
-                    'mailUrl':'mailing_list_url',
-                    'issueUrl':'issues_page_url',
+                    'help_page_url':'help_page_url',
+                    'mailing_list_url':'mailing_list_url',
+                    'issues_page_url':'issues_page_url',
                     'citation':,               !!!!!Non Dublin Core
                     'icon':'app_icon',
 
