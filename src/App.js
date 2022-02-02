@@ -61,11 +61,38 @@ function addDublin(sciMetadata){
 function processMetadata(fullMetadata){
     //todo: finish method
     fullMetadata.forEach(resource =>{
+        //console.log(resource)
+
         resource.isCuahsiApp= webapp_resources.includes(resource.resource_id);
         resource.isPersonalApp= !resource.public;
         resource.isCommunityApp = !resource.isCuahsiApp && resource.public;
-    })
-    console.log(fullMetadata)
+
+        resource.creators.forEach(creator =>{
+            if(resource.creator === creator.name){
+                resource.creator_url=creator.description;
+            };
+        });
+
+        let concat ="";
+        resource.subjects.forEach(subject =>{
+            concat+=subject.value+", ";
+        });
+        resource.keywords=concat.slice(0, -2)
+
+        concat="";
+        resource?.supported_resource_types?.supported_res_types.forEach(res_type => {
+            concat += res_type.description + ", ";
+        });
+        resource.supported_resource_types_string=concat.slice(0,-2)
+
+        concat="";
+        resource?.supported_aggregation_types?.supported_agg_types.forEach( agg_type =>{
+            concat+= agg_type.description+", ";
+        });
+        resource.supported_aggregation_types_string=concat.slice(0, -2);
+
+
+    });
     return(fullMetadata)
 }
 
@@ -100,16 +127,15 @@ function ExpandedView(props) {
                 <div><b>Home Page
                     URL: </b><a href={props.metadata.app_home_page_url.value ? props.metadata.app_home_page_url.value : undefined}>{props.metadata.app_home_page_url.value}</a>
                 </div>
-                <div><b>Version: </b>{props.version}</div>
-                <div><b>Views: </b>{props.metadata.views}</div>
-                <div><b>Date Created: </b>{props.metadata.dateCreated}</div>
-                <div><b>Last Update: </b>{props.metadata.lastUpdateDate}</div>
-                <div><b>Supported Resource Types: </b>{props.metadata.supportedResourceTypes}</div>
+                <div><b>Version: </b>{props.metadata?.version?.value}</div>
+                <div><b>Date Created: </b>{props.metadata.date_created?.split("T")[0]}</div>
+                <div><b>Last Update: </b>{props.metadata.date_last_updated?.split("T")[0]}</div>
+                <div><b>Supported Resource Types: </b>{props.metadata.supported_resource_types_string}</div>
                 <div><b>App-launching Resource Level URL
-                    Pattern: </b>{props.metadata.appLaunchingResourceUrlPattern}
+                    Pattern: </b>{props.metadata?.url_base_aggregation?.value}
                 </div>
-                <div><b>Supported Aggregation Types: </b>{props.metadata.aggregationTypes}</div>
-                <div><b>Supported File Extensions: </b>{props.metadata.fileExtensions}</div>
+                <div><b>Supported Aggregation Types: </b>{props.metadata.supported_aggregation_types_string}</div>
+                <div><b>Supported File Extensions: </b>{props.metadata?.supported_file_extensions?.value}</div>
                 <div><b>Source Code URL: </b><a
                     href={props.metadata.sourceUrl ? props.metadata.sourceUrl : undefined}>{props.metadata.sourceUrl}</a></div>
                 <div><b>Help Page URL: </b><a
@@ -215,7 +241,7 @@ function App() {
             let counter = 1;
             this.state.entries.forEach((currentEntry) => {
                 //todo: update how apps are organized into tiers. Namely personal apps should include all apps the creator has made as well as all discoverable web apps shared to them.
-                currentEntry.isPersonalApp = currentEntry.owner.includes(this.state.currentUser);
+                currentEntry.isPersonalApp = currentEntry.creator.includes(this.state.currentUser);
                 currentEntry.isCuahsiApp = this.state.ids.includes(currentEntry.resourceUrl.split('/')[4]);
                 currentEntry.isCommunityApp = !(currentEntry.isCuahsiApp || currentEntry.isPersonalApp);
                 let add_entry = false
@@ -339,7 +365,7 @@ function App() {
 
         InputButton() {
             //todo: remove method
-            if ((!this.state.metadata.appLaunchingResourceUrlPattern) || this.state.metadata.appLaunchingResourceUrlPattern.search(url_search) === -1) {
+            if ((!this.state.metadata.url_base_aggregation?.value) || this.state.metadata.url_base_aggregation.value.search(url_search) === -1) {
                 return null;
             }
             return (
@@ -373,8 +399,8 @@ function App() {
                         <div className="app-name"><a href={this.state.metadata.resourceUrl} target="_blank"
                                                      rel='noreferrer'>{this.state.metadata.name}</a></div>
                         <div className="app-owner"><a
-                            href={"https://www.hydroshare.org/" + this.state.metadata.ownerUrl} target="_blank"
-                            rel='noreferrer'>{this.state.metadata.owner.split('|')[0]}</a></div>
+                            href={"https://www.hydroshare.org/" + this.state.metadata.creator_url} target="_blank"
+                            rel='noreferrer'>{this.state.metadata.creator}</a></div>
                         <div className="app-inputs">
                             {this.InputButton()}
                         </div>
@@ -390,7 +416,7 @@ function App() {
                     <ExpandedView color={this.state.color} state={this.state.expandedState}
                                   metadata={this.state.metadata}/>
                     {this.state.showInputs ? <InputView key={this.state.key} formID={this.state.key}
-                                                        url={this.state.metadata.appLaunchingResourceUrlPattern}/> : null}
+                                                        url={this.state.metadata?.url_base_aggregation?.value}/> : null}
 
                 </div>
 
@@ -473,14 +499,14 @@ function App() {
                               [
                 {
                     'name': 'City Water Model',
-                    'owner': 'Hart Henrichsen',
-                    'ownerUrl': '/user/1001',
+                    'creator': 'Hart Henrichsen',
+                    'creator_url': '/user/1001',
                     'resourceUrl': 'https://www.hydroshare.org/resource/b2697235ef6746d3963775399f092c4f/',
                     'abstract': 'This is some code I made over the weekend. It is not done yet, but will be really cool.',
                     'short_id': 'd8e7873da67e4d8e89d94e314585f6bc',
                     'isCommunityApp': false,
                     'app_home_page_url': {'value':'http://temp'},
-                    'appLaunchingResourceUrlPattern': 'http://hyrax.hydroshare.org/opendap/${HS_RES_ID}/data/contents/${HS_FILE_PATH}.html',
+                    'url_base_aggregation': {'value':'http://hyrax.hydroshare.org/opendap/${HS_RES_ID}/data/contents/${HS_FILE_PATH}.html'},
                     'app_icon':{'value': ""}
                 },
                 {
@@ -488,20 +514,20 @@ function App() {
                     'short_id': 'ed9ede792fc74856ba77aebf9443981f',
                     'resourceUrl': 'https://www.hydroshare.org/resource/ed9ede792fc74856ba77aebf9443981f/',
                     'isCommunityApp': false,
-                    'owner': 'Bart Nijssen',
-                    'ownerUrl': '/user/1005',
-                    'appLaunchingResourceUrlPattern': 'http://hydro.pangeo.io',
+                    'creator': 'Bart Nijssen',
+                    'creator_url': '/user/1005',
+                    'url_base_aggregation': {'value':'http://hydro.pangeo.io'},
                     'abstract': 'The HydroShare Web App provides easy access to a containerized version of SUMMA as part of the NSF-funded Pangeo project. Pangeo uses docker images that contain SUMMA and pysumma and that allow SUMMA to be run from within Jupyter notebooks. The Pangeo instance enables SUMMA to be used in commercial cloud environments as well as for graduate education. [ Link to snow modeling course taught by Dr. Jessica Lundquist at the University of Washington as part of CUAHSI’s Virtual University in (Fall 2018; Fall 2019: Snow Hydrology and Modeling). Link to graduate course taught by Bart Nijssen at the University of Washington in Spring 2019 (CEWA 564 Advanced Hydrology).]\n' +
                         '\n',
                     'keywords': 'pysumma, summa, pangeo, jupyterhub, cloud computing',
                     'app_home_page_url': {'value':'http://hydro.pangeo.io'},
                     'version': null,
                     'views': 939,
-                    'dateCreated': 'Sep 21, 2018 at 9:27 p.m.',
-                    'lastUpdateDate': 'Dec 05, 2019 at 4:47 a.m.',
-                    'supportedResourceTypes': 'Generic, Composite Resource',
+                    'date_created': 'Sep 21, 2018 at 9:27 p.m.',
+                    'date_last_updated': 'Dec 05, 2019 at 4:47 a.m.',
+                    'supported_resource_types_string': 'Generic, Composite Resource',
                     'aggregationTypes': null,
-                    'fileExtensions': null,
+                    'supported_file_extensions': null,
                     'helpUrl': null,
                     'mailUrl': null,
                     'issueUrl': null,
@@ -513,20 +539,20 @@ function App() {
                     'name': 'Data Rods Explorer',
                     'resourceUrl': 'https://www.hydroshare.org/resource/9e860803f84940358a4dd0e563a96572/',
                     'isCommunityApp': false,
-                    'owner': 'Zhiyu/Drew Li',
-                    'ownerUrl': '/user/3',
-                    'appLaunchingResourceUrlPattern': null,
+                    'creator': 'Zhiyu/Drew Li',
+                    'creator_url': '/user/3',
+                    'url_base_aggregation': null,
                     'abstract': 'The Data Rods Explorer (DRE) is a web client app that enables users to browse several NASA-hosted data sets. The interface enables visualization and download of NASA observation retrievals and land surface model (LSM) outputs by variable, space and time. The key variables are precipitation, wind, temperature, surface downward radiation flux, heat flux, humidity, soil moisture, groundwater, runoff, and evapotranspiration. These variables describe the main components of the water cycle over land masses.\n' +
                         '\n',
                     'keywords': 'LSM, Land Surface Model, NASA',
                     'app_home_page_url': {'value': 'https://apps.hydroshare.org/apps/data-rods-explorer/'},
                     'version': null,
                     'views': 1183,
-                    'dateCreated': 'Dec 07, 2017 at 3:38 p.m.',
-                    'lastUpdateDate': 'Dec 07, 2017 at 3:46 p.m.',
-                    'supportedResourceTypes': null,
+                    'date_created': 'Dec 07, 2017 at 3:38 p.m.',
+                    'date_last_updated': 'Dec 07, 2017 at 3:46 p.m.',
+                    'supported_resource_types_string': null,
                     'aggregationTypes': null,
-                    'fileExtensions': null,
+                    'supported_file_extensions': null,
                     'helpUrl': null,
                     'mailUrl': null,
                     'issueUrl': null,
@@ -537,19 +563,19 @@ function App() {
                     'name': 'OPeNDAP (Hyrax)',
                     'resourceUrl': 'https://www.hydroshare.org/resource/f5c46b72d49b4019972716a82355f7bd/',
                     'isCommunityApp': true,
-                    'owner': 'David Tarboton',
-                    'ownerUrl': '/user/13',
-                    'appLaunchingResourceUrlPattern': 'http://hyrax.hydroshare.org/opendap/${HS_RES_ID}/data/contents/',
+                    'creator': 'David Tarboton',
+                    'creator_url': '/user/13',
+                    'url_base_aggregation':{'value': 'http://hyrax.hydroshare.org/opendap/${HS_RES_ID}/data/contents/'},
                     'abstract': 'This is the web app connector for the OPeNDAP service for content aggregations within Composite resources in HydroShare. The OPeNDAP service is available only for the "Public" composite resources. Due to current Hyrax deployment limitations this does not work for large NetCDF files. Exact upper limit unknown, but has been tested up to 200 MB successfully.',
                     'keywords': 'OPeNDAP, Multidimensional Space-time Data, NetCDF',
                     'app_home_page_url':{'value': 'http://hyrax.hydroshare.org/opendap/hyrax'},
                     'version': null,
                     'views': 2121,
-                    'dateCreated': 'Feb 27, 2018 at 6:40 p.m.',
-                    'lastUpdateDate': 'Apr 07, 2021 at 6:24 p.m.',
-                    'supportedResourceTypes': 'Composite Resource',
+                    'date_created': 'Feb 27, 2018 at 6:40 p.m.',
+                    'date_last_updated': 'Apr 07, 2021 at 6:24 p.m.',
+                    'supported_resource_types_string': 'Composite Resource',
                     'aggregationTypes': 'Multidimensional Content: A multidimensional dataset represented by a NetCDF file (.nc) and text file giving its NetCDF header content',
-                    'fileExtensions': '.nc',
+                    'supported_file_extensions':{'value': '.nc'},
                     'helpUrl': null,
                     'mailUrl': null,
                     'issueUrl': null,
@@ -560,19 +586,19 @@ function App() {
                     'name': 'GRACE Data Viewer',
                     'resourceUrl': 'https://www.hydroshare.org/resource/7bccb6b1ffac46e389802e90d4fa2c42/',
                     'isCommunityApp': false,
-                    'owner': 'Norm Jones',
-                    'ownerUrl': '/user/1001',
-                    'appLaunchingResourceUrlPattern': 'https://tethys.byu.edu/apps/newgrace/',
+                    'creator': 'Norm Jones',
+                    'creator_url': '/user/1001',
+                    'url_base_aggregation': {'value': 'https://tethys.byu.edu/apps/newgrace/'},
                     'abstract': 'Since 2002, NASA’s GRACE Satellite mission has allowed scientists of various disciplines to analyze and map the changes in Earth’s total water storage on a global scale. Although the raw data is available to the public, the process of viewing, manipulating, and analyzing the GRACE data can be tedious and difficult for those without strong technological backgrounds in programming or other related fields. The GRACE web app helps bridge the technical gap for decision makers by providing a user interface to visualize (in both map and time series format), not only the data collected from the GRACE mission, but the individual components of water storage as well. Using the GLDAS Land Surface model, the application allows the user to isolate and identify the changes in surface water and groundwater storage that makeup the total water storage quantities measured by the raw GRACE data. The application also includes the capability to upload a custom shapefile in order to perform a regional analysis of these changes allowing decision makers to aggregate and analyze the change in groundwater, surface water, and total water storage within their own personal regions of interest',
                     'keywords': 'NASA, GRACE, Groundwater',
                     'app_home_page_url':{'value': 'https://tethys.byu.edu/apps/newgrace/'},
-                    'version': '2.0',
+                    'version': {'value':'2.0'},
                     'views': 801,
-                    'dateCreated': 'Aug 02, 2018 at 7:50 p.m.',
-                    'lastUpdateDate': 'Aug 15, 2018 at 8:56 p.m.',
-                    'supportedResourceTypes': null,
+                    'date_created': 'Aug 02, 2018 at 7:50 p.m.',
+                    'date_last_updated': 'Aug 15, 2018 at 8:56 p.m.',
+                    'supported_resource_types_string': null,
                     'aggregationTypes': null,
-                    'fileExtensions': null,
+                    'supported_file_extensions': null,
                     'helpUrl': null,
                     'mailUrl': null,
                     'issueUrl': null,
@@ -584,19 +610,19 @@ function App() {
                     'name': 'SWATShare',
                     'resourceUrl': 'https://www.hydroshare.org/resource/3fb11de2432e46aaacd70499fd680e6d/',
                     'isCommunityApp': false,
-                    'owner': 'I Luk Kim',
-                    'ownerUrl': '/user/1001',
-                    'appLaunchingResourceUrlPattern': 'https://mygeohub.org/groups/water-hub/swatshare?source=hs&res_id=${HS_RES_ID}',
+                    'creator': 'I Luk Kim',
+                    'creator_url': '/user/1001',
+                    'url_base_aggregation': {'value':'https://mygeohub.org/groups/water-hub/swatshare?source=hs&res_id=${HS_RES_ID}'},
                     'abstract': 'SWATShare Web App for exploring HydroShare resource',
                     'keywords': 'SWATShare',
                     'app_home_page_url': {'value': 'https://mygeohub.org/groups/water-hub/swatshare_landing'},
                     'version': null,
                     'views': 1168,
-                    'dateCreated': 'Apr 14, 2016 at 3:03 a.m.',
-                    'lastUpdateDate': 'Apr 17, 2020 at 4:16 p.m.',
-                    'supportedResourceTypes': 'SWAT Model Instance Resource',
+                    'date_created': 'Apr 14, 2016 at 3:03 a.m.',
+                    'date_last_updated': 'Apr 17, 2020 at 4:16 p.m.',
+                    'supported_resource_types_string': 'SWAT Model Instance Resource',
                     'aggregationTypes': null,
-                    'fileExtensions': null,
+                    'supported_file_extensions': null,
                     'helpUrl': null,
                     'mailUrl': null,
                     'issueUrl': null,
@@ -607,20 +633,20 @@ function App() {
                     'name': 'CJW-k8s-test-js-169-80',
                     'resourceUrl': 'https://www.hydroshare.org/resource/a0f43586759e462e9956a2e0361fc887/',
                     'isCommunityApp': false,
-                    'owner': 'Zhiyu (Drew) Li',
-                    'ownerUrl': '/user/1001',
-                    'appLaunchingResourceUrlPattern': 'http://js-169-80.jetstream-cloud.org/hub/spawn?next=/user-redirect/hs-pull?id=${HS_RES_ID}%26subfolder%3DDownloads',
+                    'creator': 'Zhiyu (Drew) Li',
+                    'creator_url': '/user/1001',
+                    'url_base_aggregation':{'value': 'http://js-169-80.jetstream-cloud.org/hub/spawn?next=/user-redirect/hs-pull?id=${HS_RES_ID}%26subfolder%3DDownloads'},
                     'abstract': 'CJW K8s test\n' +
                         'http://js-169-80.jetstream-cloud.org/',
                     'keywords': 'k8s, cjw',
                     'app_home_page_url': {'value': 'http://js-169-80.jetstream-cloud.org'},
                     'version': null,
                     'views': 57,
-                    'dateCreated': 'Feb 13, 2021 at 5:33 p.m.\n',
-                    'lastUpdateDate': 'Mar 09, 2021 at 11:01 p.m.',
-                    'supportedResourceTypes': null,
+                    'date_created': 'Feb 13, 2021 at 5:33 p.m.\n',
+                    'date_last_updated': 'Mar 09, 2021 at 11:01 p.m.',
+                    'supported_resource_types_string': null,
                     'aggregationTypes': null,
-                    'fileExtensions': '.ipynb',
+                    'supported_file_extensions': {'value':'.ipynb'},
                     'helpUrl': null,
                     'mailUrl': null,
                     'issueUrl': null,
@@ -631,19 +657,19 @@ function App() {
                     'name': 'THREDDS',
                     'resourceUrl': 'https://www.hydroshare.org/resource/70070fa1b382496e85ca44894683b15d/',
                     'isCommunityApp': true,
-                    'owner': 'Anthony M. Castronova',
-                    'ownerUrl': '/user/1001',
-                    'appLaunchingResourceUrlPattern': 'https://thredds.hydroshare.org/thredds/catalog/hydroshare/resources/${HS_RES_ID}/data/contents/catalog.html',
+                    'creator': 'Anthony M. Castronova',
+                    'creator_url': '/user/1001',
+                    'url_base_aggregation':{'value': 'https://thredds.hydroshare.org/thredds/catalog/hydroshare/resources/${HS_RES_ID}/data/contents/catalog.html'},
                     'abstract': 'This is the web app connector for the HydroShare THREDDS (Thematic Real-time Environmental Distributed Data Services) server for content aggregations within Composite resources in HydroShare. The THREDDS service is available only for the "Public" composite resources. This THREDDS server supports access to netCDF data through OPeNDAP using the DAP2 protcol. This connects to a CUAHSI deployment of the UCAR Unidata THREDDS server https://www.unidata.ucar.edu/software/tds/current/TDS.html.',
                     'keywords': 'Multidimensional Space-time Data, THREDDS, NetCDF, OPeNDAP',
                     'app_home_page_url': {'value': 'http://thredds.hydroshare.org'},
                     'version': null,
                     'views': 68,
-                    'dateCreated': 'Mar 31, 2021 at 2:31 p.m.',
-                    'lastUpdateDate': 'Apr 09, 2021 at 11:28 p.m.',
-                    'supportedResourceTypes': 'Composite Resource',
+                    'date_created': 'Mar 31, 2021 at 2:31 p.m.',
+                    'date_last_updated': 'Apr 09, 2021 at 11:28 p.m.',
+                    'supported_resource_types_string': 'Composite Resource',
                     'aggregationTypes': 'Multidimensional Content: A multidimensional dataset represented by a NetCDF file (.nc) and text file giving its NetCDF header content',
-                    'fileExtensions': '.nc',
+                    'supported_file_extensions': {'value':'.nc'},
                     'helpUrl': null,
                     'mailUrl': null,
                     'issueUrl': null,
@@ -654,9 +680,9 @@ function App() {
                     'name': 'CyberGIS-Jupyter for Water',
                     'resourceUrl': 'https://www.hydroshare.org/resource/4cfd280e8eb747169b293aec2862d4f5/',
                     'isCommunityApp': true,
-                    'ownerUrl': '/user/1001',
-                    'owner': 'Shaowen Wang | Anand Padmanabhan | Fangzheng Lu | Zhiyu/Drew Li',
-                    'appLaunchingResourceUrlPattern': 'https://go.illinois.edu/cybergis-jupyter-water/hub/spawn?next=/user-redirect/hs-pull?id=${HS_RES_ID}%26subfolder%3DDownloads',
+                    'creator_url': '/user/1001',
+                    'creator': 'Shaowen Wang ',
+                    'url_base_aggregation': {'value':'https://go.illinois.edu/cybergis-jupyter-water/hub/spawn?next=/user-redirect/hs-pull?id=${HS_RES_ID}%26subfolder%3DDownloads'},
                     'abstract': 'The CyberGIS-Jupyter for Water (CJW) platform aims to advance community hydrologic modelling, and support data-intensive, reproducible, and computationally scalable water science research by simplifying access to advanced cyberGIS and cyberinfrastructure capabilities through a friendly Jupyter Notebook environment. The current release has specific support for the Structure For Unifying Multiple Modeling Alternatives (SUMMA) model and the WRFHydro model.\n' +
                         '\n' +
                         'You may open and view any notebook (*.ipynb file) with this app.\n' +
@@ -664,13 +690,13 @@ function App() {
                         'Please send comments and bug reports to help@cybergis.org.',
                     'keywords': 'jupyter, cybergis, alpha, water\n',
                     'app_home_page_url': {'value':'https://go.illinois.edu/cybergis-jupyter-water/'},
-                    'version': 'beta',
+                    'version': {'value':'beta'},
                     'views': 1056,
-                    'dateCreated': 'Oct 21, 2019 at 1:19 p.m.',
-                    'lastUpdateDate': 'Feb 17, 2021 at 8:20 p.m.',
-                    'supportedResourceTypes': 'Geographic Feature (ESRI Shapefiles), Geographic Raster, Generic, Multidimensional (NetCDF), SWAT Model Instance Resource, HIS Referenced Time Series, Time Series, Script Resource, Model Program Resource, Model Instance Resource, Collection Resource, MODFLOW Model Instance Resource, Composite Resource',
+                    'date_created': 'Oct 21, 2019 at 1:19 p.m.',
+                    'date_last_updated': 'Feb 17, 2021 at 8:20 p.m.',
+                    'supported_resource_types_string': 'Geographic Feature (ESRI Shapefiles), Geographic Raster, Generic, Multidimensional (NetCDF), SWAT Model Instance Resource, HIS Referenced Time Series, Time Series, Script Resource, Model Program Resource, Model Instance Resource, Collection Resource, MODFLOW Model Instance Resource, Composite Resource',
                     'aggregationTypes': 'Multidimensional Content: A multidimensional dataset represented by a NetCDF file (.nc) and text file giving its NetCDF header content, Referenced Time Series Content: A reference to one or more time series served from HydroServers outside of HydroShare in WaterML format, Time Series Content: One or more time series held in an ODM2 format SQLite file and optional source comma separated (.csv) files, Single File Content: A single file with file specific metadata, Geographic Raster Content: A geographic grid represented by a virtual raster tile (.vrt) file and one or more geotiff (.tif) files, Geographic Feature Content: The multiple files that are part of a geographic shapefile, File Set Content: One or more files with specific metadata',
-                    'fileExtensions': '.ipynb',
+                    'supported_file_extensions': {'value':'.ipynb'},
                     'helpUrl': false,
                     'mailUrl': false,
                     'issueUrl': null,
@@ -680,8 +706,8 @@ function App() {
                 /*
                     'name':->'title',
                     'short_id':'short_id'
-                    'owner':'creators'['order'= 1]['name'], # loop through order
-                    'ownerUrl': ,
+                    'creator':'creators'['order'= 1]['name'], # loop through order
+                    'creator_url': ,
                     ;resourceUrl':,
                     'appLaunchingResourceUrlPattern':'url_base_aggregation'['value'],
                     'appLaunchingFileUrlPattern':'url_base_file'['value'],
@@ -690,11 +716,11 @@ function App() {
                     'app_home_page_url':'app_home_page_url'['value'],
                     'version':'version',
                     'views':,              !!!!!Non Dublin Core
-                    'dateCreated':'dates'[0]['start_date'], #need to verify that 'dates'[0]['type']='created' #Not Always true
-                    'lastUpdateDate':'dates'[1]['start_date'], #need to verify that 'dates'[1]['type']='modified' #Not Always true
-                    'supportedResourceTypes':'supported_resource_types'['supported_res_types'],
+                    'date_created':'dates'[0]['start_date'], #need to verify that 'dates'[0]['type']='created' #Not Always true
+                    'date_last_updated':'date_last_updated.split("T")[0], #need to verify that 'dates'[1]['type']='modified' #Not Always true
+                    'supported_resource_types_string':'supported_resource_types'['supported_res_types'],
                     'aggregationTypes':supported_aggregation_types[supported_agg_types']['description'],
-                    'fileExtensions':'supported_file_extensions'['value'],
+                    'supported_file_extensions':'supported_file_extensions'['value'],
                     'helpUrl':'help_page_url',
                     'mailUrl':'mailing_list_url',
                     'issueUrl':'issues_page_url',
