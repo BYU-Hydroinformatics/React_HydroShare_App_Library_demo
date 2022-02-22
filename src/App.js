@@ -18,12 +18,11 @@ const increaseMaxInputStepSize = 10;
 const backendUrl= "http://localhost:4000/auth/hydroshare"
 const getResourcesUrl= "https://www.hydroshare.org/hsapi/resource/?edit_permission=false&published=false&type=ToolResource&include_obsolete=false";
 
-function loadResources(){
+async function loadResources(){
     /**
      *  This function authenticates the user with HydroShare and then loads all web app connectors the user has access to.
      */
-
-    fetch(getResourcesUrl)
+    let value=await fetch(getResourcesUrl)
         .then(function (response){
             if(response.ok){
                 return(response.json());
@@ -31,13 +30,14 @@ function loadResources(){
             throw new Error("Network response was not okay.");
         })
         .then(function (data){
-            //console.log(data.results)
-            addDublin(data.results)
+           return addDublin(data.results);
     })
+    return value;
+
 }
 
-function addDublin(sciMetadata){
-    Promise.all(sciMetadata.map( (resource) =>{
+async function addDublin(sciMetadata){
+    return Promise.all(sciMetadata.map( (resource) =>{
         let resourceId=resource.resource_id;
         const url= "https://www.hydroshare.org/hsapi/resource/"+resourceId+"/scimeta/elements/";
         return fetch(url)
@@ -52,17 +52,14 @@ function addDublin(sciMetadata){
             });
 
     }))
-        .then((data) =>{
-            console.log(data.length)
-            processMetadata(data)
+        .then( async(data) =>{
+
+            return processMetadata(data);
         });
 }
 
 function processMetadata(fullMetadata){
-    //todo: finish method
     fullMetadata.forEach(resource =>{
-        console.log(resource)
-
         resource.isCuahsiApp= webapp_resources.includes(resource.resource_id);
         resource.isPersonalApp= !resource.public;
         resource.isCommunityApp = !resource.isCuahsiApp && resource.public;
@@ -106,7 +103,7 @@ function getHydroShareUser(){
             throw new Error("User Not Obtained from HydroShare")
         })
         .then (function (data){
-            console.log(data)
+            //console.log(data)
             if(typeof data.id !== 'undefined'){
                 return data.id;
             }
@@ -115,7 +112,6 @@ function getHydroShareUser(){
             }
         })
 }
-
 
 function ExpandedView(props) {
     if (props.state) {
@@ -129,8 +125,7 @@ function ExpandedView(props) {
                 <div><b>Date Created: </b>{props.metadata.date_created?.split("T")[0]}</div>
                 <div><b>Last Update: </b>{props.metadata.date_last_updated?.split("T")[0]}</div>
                 <div><b>Supported Resource Types: </b>{props.metadata.supported_resource_types_string}</div>
-                <div><b>App-launching Resource Level URL
-                    Pattern: </b>{props.metadata?.url_base_aggregation?.value}
+                <div><b>App-launching Resource Level URL Pattern: </b>{props.metadata?.url_base_aggregation?.value}
                 </div>
                 <div><b>Supported Aggregation Types: </b>{props.metadata.supported_aggregation_types_string}</div>
                 <div><b>Supported File Extensions: </b>{props.metadata?.supported_file_extensions?.value}</div>
@@ -169,15 +164,16 @@ function TagsDiv(props) {
     }
     let link;
     let title;
-    if (props.image === 'cuahsi') {
-        link = cuahsi_logo;
-        title = "CUAHSI App"
+    if (props.image === 'personal') {
+        link = personal_logo;
+        title = "My Personal App"
+
     } else if (props.image === 'community') {
         link = community_logo;
         title = "Community App"
-    } else if (props.image === 'personal') {
-        link = personal_logo;
-        title = "My Personal App"
+    } else if (props.image === 'cuahsi') {
+        link = cuahsi_logo;
+        title = "CUAHSI App"
     } else {
         console.log("The following image is invalid " + props.image);
         return null;
@@ -190,8 +186,6 @@ function TagsDiv(props) {
 }
 
 function App() {
-
-    loadResources()
 
     class DynamicTable extends React.Component {
         constructor(props) {
@@ -206,11 +200,13 @@ function App() {
                 checkboxCUAHSI: true,
                 checkboxCommunity: true,
                 maxInputs: defaultMaxInputs,
+                entriesLoaded:false,
             }
 
             this.boxOnChange = this.boxOnChange.bind(this);
             this.searchOnChange = this.searchOnChange.bind(this);
             this.onLoadMore = this.onLoadMore.bind(this);
+            this.addEntries = this.addEntries.bind(this);
         }
 
         boxOnChange(event) {
@@ -232,16 +228,29 @@ function App() {
             this.setState({maxInputs: newMax});
         }
 
+        async addEntries(){
+            let resources=await loadResources()
+            if (!this.state.entriesLoaded && resources){
+                this.setState({entries:resources, entriesLoaded:true})
+            }
+        }
 
         render() {
+            this.addEntries()
+            if(!this.state.entries){
+                //todo: fill in loading screen
+                return null;
+            }
             document.title = "HydroShare Demo App Library";
             const rows = [];
             let counter = 1;
             this.state.entries.forEach((currentEntry) => {
+                console.log(currentEntry)
                 //todo: update how apps are organized into tiers. Namely personal apps should include all apps the creator has made as well as all discoverable web apps shared to them.
-                currentEntry.isPersonalApp = currentEntry.creator.includes(this.state.currentUser);
-                currentEntry.isCuahsiApp = this.state.ids.includes(currentEntry.resourceUrl.split('/')[4]);
-                currentEntry.isCommunityApp = !(currentEntry.isCuahsiApp || currentEntry.isPersonalApp);
+                currentEntry.isPersonalApp = currentEntry.creator.includes(this.state.currentUser) || !currentEntry.public;
+                currentEntry.isCuahsiApp = this.state.ids.includes(currentEntry.resource_id);
+                currentEntry.isCommunityApp = currentEntry.public && !(currentEntry.isCuahsiApp);
+
                 let add_entry = false
                 if ((this.state.checkboxCommunity && currentEntry.isCommunityApp) || (this.state.checkboxCUAHSI && currentEntry.isCuahsiApp) || (this.state.checkboxMy && currentEntry.isPersonalApp)) {
                     let searchable_array = Object.values(currentEntry)
@@ -334,8 +343,8 @@ function App() {
                 key: props.position,
             }
 
-            if(this.state.metadata.app_icon.value ===""){
-                this.state.metadata.app_icon.value =app_logo;
+            if( this.state.metadata?.app_icon?.value ===""|| !this.state.metadata.app_icon){
+                this.state.metadata.app_icon={value:app_logo};
             }
 
             this.changeExpandedState = this.changeExpandedState.bind(this);
@@ -368,7 +377,7 @@ function App() {
             }
             return (
                 <button className={"btn btn-default"}
-                    /*onClick={() => {this.setState({showInputs: this.changeShowInputs()}) }}*/
+                    onClick={() => {this.setState({showInputs: this.changeShowInputs()}) }}
                 >
                     {/*<img src={inputs_logo} alt="Optional HydroShare inputs. Click to view."/>*/}
                     Run Demo
@@ -377,12 +386,13 @@ function App() {
         }
 
         render() {
+
             return (
                 <div className="full-entry" id={"App_Entry_#" + this.state.key}>
                     <div
                         className={this.state.expandedState ? this.state.color + " entry expanded" : this.state.color + " entry"}>
                         <div className='grid-1-1'>
-                            <a href={this.state.metadata.app_home_page_url.value} target="_blank" rel="noreferrer">
+                            <a href={this.state.metadata?.app_home_page_url?.value} target="_blank" rel="noreferrer">
                                 <input type="image"
                                        src={this.state.metadata.app_icon.value}
                                        alt={this.state.metadata.title}
@@ -394,8 +404,8 @@ function App() {
                             <TagsDiv image={'community'} value={this.state.metadata.isCommunityApp}/>
                             <TagsDiv image={'personal'} value={this.state.metadata.isPersonalApp}/>
                         </div>
-                        <div className="app-name"><a href={this.state.metadata.resourceUrl} target="_blank"
-                                                     rel='noreferrer'>{this.state.metadata.name}</a></div>
+                        <div className="app-name"><a href={this.state.metadata.resource_url} target="_blank"
+                                                     rel='noreferrer'>{this.state.metadata.resource_title}</a></div>
                         <div className="app-owner"><a
                             href={"https://www.hydroshare.org/" + this.state.metadata.creator_url} target="_blank"
                             rel='noreferrer'>{this.state.metadata.creator}</a></div>
@@ -492,14 +502,14 @@ function App() {
     return (
         <div>
             <HydroShareLogin />
-            <DynamicTable user={'Hart Henrichsen'}
-                          entries={
+            <DynamicTable user={'David Tarboton'}
+                          /*entries={
                               [
                 {
-                    'name': 'City Water Model',
+                    'resource_title': 'City Water Model',
                     'creator': 'Hart Henrichsen',
                     'creator_url': '/user/1001',
-                    'resourceUrl': 'https://www.hydroshare.org/resource/b2697235ef6746d3963775399f092c4f/',
+                    'resource_url': 'https://www.hydroshare.org/resource/b2697235ef6746d3963775399f092c4f/',
                     'abstract': 'This is some code I made over the weekend. It is not done yet, but will be really cool.',
                     'short_id': 'd8e7873da67e4d8e89d94e314585f6bc',
                     'isCommunityApp': false,
@@ -509,9 +519,9 @@ function App() {
                     'source_code_url' :'https://google.com',
                 },
                 {
-                    'name': 'HydroShare Pangeo',
+                    'resource_title': 'HydroShare Pangeo',
                     'short_id': 'ed9ede792fc74856ba77aebf9443981f',
-                    'resourceUrl': 'https://www.hydroshare.org/resource/ed9ede792fc74856ba77aebf9443981f/',
+                    'resource_url': 'https://www.hydroshare.org/resource/ed9ede792fc74856ba77aebf9443981f/',
                     'isCommunityApp': false,
                     'creator': 'Bart Nijssen',
                     'creator_url': '/user/1005',
@@ -534,8 +544,8 @@ function App() {
                     'app_icon': {'value': 'https://avatars1.githubusercontent.com/u/23299451?s=200&v=4'}
                 },
                 {
-                    'name': 'Data Rods Explorer',
-                    'resourceUrl': 'https://www.hydroshare.org/resource/9e860803f84940358a4dd0e563a96572/',
+                    'resource_title': 'Data Rods Explorer',
+                    'resource_url': 'https://www.hydroshare.org/resource/9e860803f84940358a4dd0e563a96572/',
                     'isCommunityApp': false,
                     'creator': 'Zhiyu/Drew Li',
                     'creator_url': '/user/3',
@@ -558,8 +568,8 @@ function App() {
                     'app_icon': {'value':"https://apps.hydroshare.org/static/data_rods_explorer/images/DataRodsExplorer_icon.png"}
                 },
                 {
-                    'name': 'OPeNDAP (Hyrax)',
-                    'resourceUrl': 'https://www.hydroshare.org/resource/f5c46b72d49b4019972716a82355f7bd/',
+                    'resource_title': 'OPeNDAP (Hyrax)',
+                    'resource_url': 'https://www.hydroshare.org/resource/f5c46b72d49b4019972716a82355f7bd/',
                     'isCommunityApp': true,
                     'creator': 'David Tarboton',
                     'creator_url': '/user/13',
@@ -581,8 +591,8 @@ function App() {
                     'app_icon': {'value': 'https://pbs.twimg.com/profile_images/1003722775058702336/t8-nftfg_400x400.jpg'}
                 },
                 {
-                    'name': 'GRACE Data Viewer',
-                    'resourceUrl': 'https://www.hydroshare.org/resource/7bccb6b1ffac46e389802e90d4fa2c42/',
+                    'resource_title': 'GRACE Data Viewer',
+                    'resource_url': 'https://www.hydroshare.org/resource/7bccb6b1ffac46e389802e90d4fa2c42/',
                     'isCommunityApp': false,
                     'creator': 'Norm Jones',
                     'creator_url': '/user/1001',
@@ -605,8 +615,8 @@ function App() {
                           }
                 },
                 {
-                    'name': 'SWATShare',
-                    'resourceUrl': 'https://www.hydroshare.org/resource/3fb11de2432e46aaacd70499fd680e6d/',
+                    'resource_title': 'SWATShare',
+                    'resource_url': 'https://www.hydroshare.org/resource/3fb11de2432e46aaacd70499fd680e6d/',
                     'isCommunityApp': false,
                     'creator': 'I Luk Kim',
                     'creator_url': '/user/1001',
@@ -628,8 +638,8 @@ function App() {
                     'app_icon': {'value':"https://mygeohub.org/groups/water-hub/File:1449835642_magnifier.png" }
                 },
                 {
-                    'name': 'CJW-k8s-test-js-169-80',
-                    'resourceUrl': 'https://www.hydroshare.org/resource/a0f43586759e462e9956a2e0361fc887/',
+                    'resource_title': 'CJW-k8s-test-js-169-80',
+                    'resource_url': 'https://www.hydroshare.org/resource/a0f43586759e462e9956a2e0361fc887/',
                     'isCommunityApp': false,
                     'creator': 'Zhiyu (Drew) Li',
                     'creator_url': '/user/1001',
@@ -652,8 +662,8 @@ function App() {
                     'app_icon': {'value':""}
                 },
                 {
-                    'name': 'THREDDS',
-                    'resourceUrl': 'https://www.hydroshare.org/resource/70070fa1b382496e85ca44894683b15d/',
+                    'resource_title': 'THREDDS',
+                    'resource_url': 'https://www.hydroshare.org/resource/70070fa1b382496e85ca44894683b15d/',
                     'isCommunityApp': true,
                     'creator': 'Anthony M. Castronova',
                     'creator_url': '/user/1001',
@@ -675,8 +685,8 @@ function App() {
                     'app_icon': {'value':"https://unidata.ucar.edu/images/logos/badges/badge_tds_100.jpg"}
                 },
                 {
-                    'name': 'CyberGIS-Jupyter for Water',
-                    'resourceUrl': 'https://www.hydroshare.org/resource/4cfd280e8eb747169b293aec2862d4f5/',
+                    'resource_title': 'CyberGIS-Jupyter for Water',
+                    'resource_url': 'https://www.hydroshare.org/resource/4cfd280e8eb747169b293aec2862d4f5/',
                     'isCommunityApp': true,
                     'creator_url': '/user/1001',
                     'creator': 'Shaowen Wang ',
@@ -701,71 +711,10 @@ function App() {
                     'rights': 'Li, Z. (., F. Lu, A. Padmanabhan, S. Wang (2021). CyberGIS-Jupyter for Water, HydroShare, http://www.hydroshare.org/resource/4cfd280e8eb747169b293aec2862d4f5',
                     'app_icon': {'value':'https://pbs.twimg.com/profile_images/1003722775058702336/t8-nftfg_400x400.jpg'}
                 }
-                /*
-                    'name':->'title',
-                    'short_id':'short_id'
-                    'creator':'creators'['order'= 1]['name'], # loop through order
-                    'creator_url': ,
-                    ;resourceUrl':,
-                    'appLaunchingResourceUrlPattern':'url_base_aggregation'['value'],
-                    'appLaunchingFileUrlPattern':'url_base_file'['value'],
-                    'abstract':'description',
-                    'keywords':for subject in  'subjects': subject['value'],
-                    'app_home_page_url':'app_home_page_url'['value'],
-                    'version':'version',
-                    'views':,              !!!!!Non Dublin Core
-                    'date_created':'dates'[0]['start_date'], #need to verify that 'dates'[0]['type']='created' #Not Always true
-                    'date_last_updated':'date_last_updated.split("T")[0], #need to verify that 'dates'[1]['type']='modified' #Not Always true
-                    'supported_resource_types_string':'supported_resource_types'['supported_res_types'],
-                    'aggregationTypes':supported_aggregation_types[supported_agg_types']['description'],
-                    'supported_file_extensions':'supported_file_extensions'['value'],
-                    'help_page_url':'help_page_url',
-                    'mailing_list_url':'mailing_list_url',
-                    'issues_page_url':'issues_page_url',
-                    'citation':,               !!!!!Non Dublin Core
-                    'icon':'app_icon',
 
-                    to add:
-                    'contributors':
-                    'funding_agencies':
-                    'identifiers': -> resource Id or link to web app connector
-                    'rights':
-                    'relations': -> Can be Used for Demo Resource
-                    'url_base':??????
-                    'testing_protocol_url':
-                    'roadmap':
-                */
-                /* Dublin Core Metadata
-                    'title':
-                    'app owner':
-                    'creators':
-                    'contributors':
-                    'created_date':
-                    'last_modified':
-                    'description':
-                    'funding_agencies':
-                    'resource_id': #not Dublin Core but is required to get
-                    'Copyrights':
-                    'sources':
-                    'subjects': # aka keywords
-                    'relations':
-                    'url_base':
-                    'url_base_aggregation':
-                    'url_base_file':
-                    'version':
-                    'supported_resource_types':
-                    'supported_aggregation_types':
-                    'app_icon':
-                    'supported_file_extensions':
-                    'app_home_page_url':
-                    'mailing_list_url':
-                    'testing_protocol_url':
-                    'help_page_url':
-                    'source_code_url':
-                    'issues_page_url':
-                 */
             ]
                           }
+                          */
             />
         </div>
     );
