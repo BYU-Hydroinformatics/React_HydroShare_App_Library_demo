@@ -60,6 +60,7 @@ async function addDublin(sciMetadata){
 
 function processMetadata(fullMetadata){
     fullMetadata.forEach(resource =>{
+        //todo: remove these three booleans?
         resource.isCuahsiApp= webapp_resources.includes(resource.resource_id);
         resource.isPersonalApp= !resource.public;
         resource.isCommunityApp = !resource.isCuahsiApp && resource.public;
@@ -245,7 +246,6 @@ function App() {
             const rows = [];
             let counter = 1;
             this.state.entries.forEach((currentEntry) => {
-                console.log(currentEntry)
                 //todo: update how apps are organized into tiers. Namely personal apps should include all apps the creator has made as well as all discoverable web apps shared to them.
                 currentEntry.isPersonalApp = currentEntry.creator.includes(this.state.currentUser) || !currentEntry.public;
                 currentEntry.isCuahsiApp = this.state.ids.includes(currentEntry.resource_id);
@@ -322,7 +322,7 @@ function App() {
                     </div>
                     <div className="infinite-scroll">
                         <button type="button" placeholder="Show More" className="load-more btn-default"
-                                onClick={this.onLoadMore}>Load More
+                                onClick={this.onLoadMore} disabled={this.state.maxInputs >= this.state?.entries.length}>Load More
                         </button>
                     </div>
                     <br/>
@@ -341,6 +341,7 @@ function App() {
                 color: props.position % 2 === 0 ? 'light-theme' : 'dark-theme',
                 metadata: props.metadata,
                 key: props.position,
+                refresh_images:false,
             }
 
             if( this.state.metadata?.app_icon?.value ===""|| !this.state.metadata.app_icon){
@@ -386,16 +387,19 @@ function App() {
         }
 
         render() {
-
             return (
                 <div className="full-entry" id={"App_Entry_#" + this.state.key}>
                     <div
                         className={this.state.expandedState ? this.state.color + " entry expanded" : this.state.color + " entry"}>
                         <div className='grid-1-1'>
                             <a href={this.state.metadata?.app_home_page_url?.value} target="_blank" rel="noreferrer">
-                                <input type="image"
+                                <img type="image"
                                        src={this.state.metadata.app_icon.value}
                                        alt={this.state.metadata.title}
+                                       onError={(event) => {
+                                           event.target.src = app_logo;
+                                           event.onerror = null;
+                                       }}
                                 />
                             </a>
                         </div>
