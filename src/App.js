@@ -1,8 +1,6 @@
 import './App.css';
 import React from "react";
 import cuahsi_logo from "./img/cuahsi_logo.png";
-import community_logo from "./img/communities.png";
-import personal_logo from "./img/personal.png";
 import app_logo from "./img/app_icon.png";
 import footer_logo from "./img/footer.png";
 import header_logo from "./img/header.png";
@@ -22,8 +20,6 @@ async function loadResources(){
     /**
      *  This function authenticates the user with HydroShare and then loads all web app connectors the user has access to.
      */
-    let username ='henricha';
-    let password ='Hart#9027';
     let value=await fetch(getResourcesUrl)
         .then(function (response){
             if(response.ok){
