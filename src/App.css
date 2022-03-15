@@ -53,10 +53,10 @@ a:active, a:hover {
 }
 
 .app-abstract, .app-abstract-expanded{
-    grid-row-start: 2;
-    grid-row-end: 2;
+    grid-row-start: 4;
+    grid-row-end: 4;
     grid-column-start: 2;
-    grid-column-end: 5;
+    grid-column-end: 4;
     overflow: hidden;
     text-align: left;
     min-height: 3em;
@@ -79,10 +79,8 @@ a:active, a:hover {
 .app-expand {
     position: relative;
     max-height: 3em;
-    grid-column-start: 5;
-    grid-column-end: 6;
-    grid-row-start: 2;
-    grid-row-end: 3;
+    grid-column: 3;
+    grid-row: 1;
 }
 
 .app-expanded {
@@ -93,8 +91,11 @@ a:active, a:hover {
 }
 
 .app-grid-expanded{
-    display: grid; grid-template-columns:49.5% 49.5%; border-left: 1px solid #AAA; border-right: 1px solid #AAA;
-    grid-template-rows:auto auto auto auto auto auto auto auto; row-gap: 0px; column-gap: 5px;
+    max-width: 100%;
+    grid-template-columns:99%;
+    border-left: 1px solid #AAA;
+    border-right: 1px solid #AAA;
+    row-gap: 0px;
     font-size: 14px;
     overflow-wrap: break-word;
 
@@ -105,21 +106,25 @@ a:active, a:hover {
 }
 
 .app-inputs {
-    grid-column: 5;
-    grid-row: 1;
+    grid-column: 2;
+    grid-row: 3;
     position: relative;
 }
 
 .app-name {
-    grid-column: 3;
+    grid-column: 2;
     grid-row: 1;
-    margin: auto
+    margin: auto;
+    font-size: 22px;
+    justify-self: left;
+    width: 100%;
 }
 
 .app-owner {
-    grid-column: 4;
-    grid-row: 1;
-    margin: auto
+    grid-column: 2;
+    grid-row: 3;
+    margin: auto;
+    width : 100%;
 }
 
 body, html{
@@ -183,26 +188,26 @@ body, html{
 
 .entry {
     display: grid;
-    text-align: center;
+    text-align: left;
     font-size: 14px;
     border-left: 1px solid #AAA;
     border-right: 1px solid #AAA;
     border-top: 1px solid #AAA;
     grid-gap: 1px;
     row-gap: 1px;
-    grid-template-columns:10% 10% auto  20% 15%;
-    grid-template-rows:4em 3em;
+    grid-template-columns:10em auto 10em;
+    grid-template-rows: auto 2.3em 2.3em 2.3em;
 }
 .entry.expanded .grid-1-1{
     vertical-align: top;
     position: relative;
     top: 0px;
-    grid-row-end: 2;
+    grid-row-end: 5;
     padding: 2px 0px 0px;
 }
 
 .expanded {
-    grid-template-rows:4em auto;
+    grid-template-rows: auto 2.3em 2.3em auto;
 }
 
 form input{
@@ -218,19 +223,19 @@ form input{
 
 .grid-1-1 {
     grid-row-start: 1;
-    grid-row-end: 3;
+    grid-row-end: 5;
     grid-column-start: 1;
     grid-column-end: 2;
     margin-left: .25em;
-    min-width: 56px;
-    max-width: 100%;
-    max-height: 7em;
+    max-width: 93%;
+    height: 10em;
     padding: 2px 0px 0px;
 
 }
 .grid-1-1 img{
-    max-height: 6.5em;
-    max-width: 6.5em;
+    width:100%;
+    max-height: 9.75em;
+    max-width: 9.75em;
 }
 
 h1{
@@ -264,8 +269,9 @@ html, body {
 
 .image-tags {
     grid-column: 2;
-    grid-row: 1;
-    margin: auto
+    grid-row: 2;
+    margin: auto;
+    width: 100%;
 }
 
 .image-tags-image {
