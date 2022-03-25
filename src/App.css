@@ -121,8 +121,9 @@ a:active, a:hover {
 }
 
 .app-owner {
-    grid-column: 2;
-    grid-row: 3;
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row: 2;
     margin: auto;
     width : 100%;
 }
@@ -195,8 +196,9 @@ body, html{
     border-top: 1px solid #AAA;
     grid-gap: 1px;
     row-gap: 1px;
-    grid-template-columns:10em auto 10em;
-    grid-template-rows: auto 2.3em 2.3em 2.3em;
+    grid-template-columns:9em auto 10em;
+    grid-template-rows: auto 1.5em 1.5em 2.5em;
+    max-width: 100%;
 }
 .entry.expanded .grid-1-1{
     vertical-align: top;
@@ -207,7 +209,7 @@ body, html{
 }
 
 .expanded {
-    grid-template-rows: auto 2.3em 2.3em auto;
+    grid-template-rows: auto 1.5em 1.5em auto;
 }
 
 form input{
@@ -228,14 +230,14 @@ form input{
     grid-column-end: 2;
     margin-left: .25em;
     max-width: 93%;
-    height: 10em;
+    height: 8.3em;
     padding: 2px 0px 0px;
 
 }
 .grid-1-1 img{
     width:100%;
-    max-height: 9.75em;
-    max-width: 9.75em;
+    max-height: 7.8em;
+    max-width: 7.8em;
 }
 
 h1{
@@ -269,14 +271,22 @@ html, body {
 
 .image-tags {
     grid-column: 2;
-    grid-row: 2;
+    grid-column-end: 4;
+    grid-row-start: 3;
     margin: auto;
     width: 100%;
 }
+.image-tags > p{
+    font-style: italic;
+    color: #777777;
+    margin: 0px 0px 0px 0px;
+}
 
 .image-tags-image {
-    height: 20px;
-    max-height: 100%
+    height: 16px;
+    max-height: 100%;
+    padding: 0px .33em 2px 2px;
+    align-self: center;
 }
 
 .input-form{
@@ -301,6 +311,15 @@ html, body {
     text-align: center;
     line-height: 200%;
     margin-bottom: 1em;
+}
+.introduction{
+    position: relative;
+    font-size: 20px;
+    width: 90%;
+    left: 5%;
+    right: 5%;
+    text-align: left;
+    padding-bottom: 1em;
 }
 .load-more{
     left: 0%;
@@ -362,6 +381,13 @@ input[type=checkbox]:focus{
     flex-direction: column;
     padding-bottom: 0px;
     border-bottom: 1px solid #AAA;
+}
+.table>:not(caption)>*>*.app-name {
+    padding-top: 7px;
+    padding-bottom: 0px;
+}
+.table>:not(caption)>*>*{
+    padding-top: 0px;
 }
 
 .table>:not(caption)>*>*.grid-1-1{

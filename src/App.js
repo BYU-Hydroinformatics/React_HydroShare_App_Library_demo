@@ -107,6 +107,68 @@ function getHydroShareUser(){
         })
 }
 
+function EntryTag(props){
+    /**
+     * This function displays the tags for a given entry.
+     * Inputs: props an object with a tagBooleans list
+     *         tagBooleans is a list of three booleans (isCUAHSIapp, isCommunityapp, and isPersonalapp)
+     * Returns: div of entry tags to be displayed by entry class
+     */
+    const values=props.tagBooleans;
+    let response=[]
+    if(values.length!==3){
+        console.log("This function was not called properly")
+        return null;
+    }
+    const sum=values[0]+values[1]+values[2];
+    if(sum===0){
+        console.log("This entry does not have any tags")
+        return null;
+    }
+    else if(sum ===3 ||(values[0]&&values[1])){
+        console.log("This entry's tags were not set up properly")
+    }
+    else if(sum === 2){
+        if (values[0]){
+            response.push(<p key={sum}>
+                <img src={cuahsi_logo} className="image-tags-image"
+                     title="CUAHSI Endorsed App"
+                     alt="CUAHSI Endorsed App"/>
+                CUAHSI Endorsed and Personal App
+            </p>);
+        }
+        else {
+            response.push(<p key={sum}>
+                Community and Personal App
+            </p>);
+        }
+    }
+    else{
+        if(values[0]){
+            response.push(<p key={sum}>
+                <img src={cuahsi_logo} className="image-tags-image"
+                     title="CUAHSI Endorsed App"
+                     alt="CUAHSI Endorsed App"/>
+                CUAHSI Endorsed App
+            </p>);
+        }
+        else if(values[1]){
+            response.push(<p key={sum}>
+                Community App
+            </p>);
+        }
+        else if(values[2]){
+            response.push(<p key={sum}>
+                Personal App
+            </p>);
+        }
+        else{
+            console.log("There is an error with the EntryTag function")
+        }
+    }
+    return (<div className="image-tags">{response}</div>);
+}
+
 function ExpandedView(props) {
     if (props.state) {
         return (
@@ -123,15 +185,6 @@ function ExpandedView(props) {
                 </div>
                 <div><b>Supported Aggregation Types: </b>{props.metadata.supported_aggregation_types_string}</div>
                 <div><b>Supported File Extensions: </b>{props.metadata?.supported_file_extensions?.value}</div>
-                <div><b>Source Code URL: </b><a
-                    href={props.metadata.source_code_url?.value ? props.metadata.source_code_url?.value : undefined} target="_blank">{props.metadata.source_code_url?.value}</a></div>
-                <div><b>Help Page URL: </b><a
-                    href={props.metadata.help_page_url?.value ? props.metadata.help_page_url?.value : undefined} target="_blank">{props.metadata.help_page_url?.value}</a></div>
-                <div><b>Mailing List URL: </b><a
-                    href={props.metadata.mailing_list_url?.value ? props.metadata.mailing_list_url?.value : undefined} target="_blank" >{props.metadata.mailing_list_url?.value}</a></div>
-
-                <div><b>Issues Page URL: </b><a
-                    href={props.metadata.issues_page_url?.value ? props.metadata.issues_page_url?.value : undefined} target="_blank" >{props.metadata.issues_page_url?.value}</a></div>
                 <div className="app-citation">
                     <b>Copyright: </b> {props.metadata.rights}
                 </div>
@@ -152,66 +205,10 @@ function HydroShareLogin() {
     );
 }
 
-function EntryTag(props){
-    /**
-     * This function displays the tags for a given entry.
-     * Inputs: props an object with a tagBooleans list
-     *         tagBooleans is a list of three booleans (isCUAHSIapp, isCommunityapp, and isPersonalapp)
-     * Returns: div of entry tags to be displayed by entry class
-     */
-    const values=props.tagBooleans;
-    let response=[]
-    if(values.length!=3){
-        console.log("This function was not called properly")
-        return null;
-    }
-    const sum=values[0]+values[1]+values[2];
-    if(sum===0){
-        console.log("This entry does not have any tags")
-        return null;
-    }
-    else if(sum ===3 ||(values[0]&&values[1])){
-        console.log("This entry's tags were not set up properly")
-    }
-    else if(sum === 2){
-        if (values[0]){
-            response.push(<p key={sum}>
-                <img src={cuahsi_logo} className="image-tags-image"
-                     title="CUAHSI Endorsed App"
-                     alt="CUAHSI Endorsed App"/>
-                 CUAHSI Endorsed and Personal App
-            </p>);
-        }
-        else {
-            response.push(<p key={sum}>
-                Community and Personal App
-                </p>);
-        }
-    }
-    else{
-        if(values[0]){
-            response.push(<p key={sum}>
-                <img src={cuahsi_logo} className="image-tags-image"
-                   title="CUAHSI Endorsed App"
-                   alt="CUAHSI Endorsed App"/>
-               CUAHSI Endorsed App
-            </p>);
-        }
-        else if(values[1]){
-            response.push(<p key={sum}>
-                Community App
-            </p>);
-            }
-        else if(values[2]){
-            response.push(<p key={sum}>
-                Personal App
-            </p>);
-        }
-        else{
-            console.log("There is an error with the EntryTag function")
-        }
-    }
-    return (<div className="image-tags">{response}</div>);
+function Introduction(){
+    return (<div className="introduction">
+        Welcome to the HydroShare App Library. The App Library allows you to discover web apps created by CUAHSI and other HydroShare users. You can launch web apps directly by clicking on the web app icon. Alternatively you can click on the title to visit the web app connector landing page.
+    </div> )
 }
 
 function App() {
@@ -230,6 +227,7 @@ function App() {
                 checkboxCommunity: true,
                 maxInputs: defaultMaxInputs,
                 entriesLoaded:false,
+                rows:[],
             }
 
             this.boxOnChange = this.boxOnChange.bind(this);
@@ -242,10 +240,11 @@ function App() {
             const target = event.target;
             const value = target.type === 'checkbox' ? target.checked : target.value;
             const name = target.name;
-
             this.setState({
                 [name]: value
             });
+            this.searchOnChange(event);
+            console.log("checkbox Change")
         }
 
         searchOnChange(event) {
@@ -265,6 +264,7 @@ function App() {
         }
 
         render() {
+            console.log("Table has been rerendered")
             this.addEntries()
             if(!this.state.entries){
                 //todo: fill in loading screen
@@ -309,6 +309,7 @@ function App() {
                     <br/>
                     <h1>HydroShare Web Application Library</h1>
                     <br/>
+                    {Introduction()}
                     <div className="search-box form-group">
                         <input type="text"
                                id="search-box"
@@ -422,18 +423,16 @@ function App() {
                                 />
                             </a>
                         </div>
-                        <div className="image-tags">
-                            <EntryTag tagBooleans={[this.state.metadata.isCuahsiApp,this.state.metadata.isCommunityApp,this.state.metadata.isPersonalApp]} />
-
-                        </div>
                         <div className="app-name"><a href={this.state.metadata.resource_url} target="_blank"
                                                      rel='noreferrer'>{this.state.metadata.resource_title}</a></div>
                         <div className="app-owner"><a
                             href={"https://www.hydroshare.org/" + this.state.metadata.creator_url} target="_blank"
                             rel='noreferrer'>{this.state.metadata.creator}</a></div>
-                        <div className="app-inputs">
-
+                        <div className="image-tags">
+                            <EntryTag tagBooleans={[this.state.metadata.isCuahsiApp,this.state.metadata.isCommunityApp,this.state.metadata.isPersonalApp]} />
                         </div>
+
+
                         <div className={this.state.expandedState ? "app-abstract-expanded" : "app-abstract"}>
                             {this.state.metadata.abstract}
                         </div>
