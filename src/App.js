@@ -270,31 +270,39 @@ function App() {
                 //todo: fill in loading screen
                 return null;
             }
-            document.title = "HydroShare Demo App Library";
-            const rows = [];
-            let counter = 1;
-            this.state.entries.forEach((currentEntry) => {
-                currentEntry.isPersonalApp = currentEntry.creator.includes(this.state.currentUser) || !currentEntry.public;
-                currentEntry.isCuahsiApp = this.state.ids.includes(currentEntry.resource_id);
-                currentEntry.isCommunityApp = currentEntry.public && !(currentEntry.isCuahsiApp);
+                document.title = "HydroShare Demo App Library";
+                let rows= [];
+                let counter = 1;
+                this.state.entries.forEach((currentEntry) => {
+                    currentEntry.isPersonalApp = currentEntry.creator.includes(this.state.currentUser) || !currentEntry.public;
+                    currentEntry.isCuahsiApp = this.state.ids.includes(currentEntry.resource_id);
+                    currentEntry.isCommunityApp = currentEntry.public && !(currentEntry.isCuahsiApp);
 
-                let add_entry = false
-                if ((this.state.checkboxCommunity && currentEntry.isCommunityApp) || (this.state.checkboxCUAHSI && currentEntry.isCuahsiApp) || (this.state.checkboxMy && currentEntry.isPersonalApp)) {
-                    let searchable_array = Object.values(currentEntry)
-                    searchable_array.forEach((meta) => {
-                        if (meta !== null && meta.type !== Boolean && meta.toString().includes(this.state.searchString)) {
+                    let add_entry = false
+                    if ((this.state.checkboxCommunity && currentEntry.isCommunityApp) || (this.state.checkboxCUAHSI && currentEntry.isCuahsiApp) || (this.state.checkboxMy && currentEntry.isPersonalApp)) {
+                        if (this.state.searchString === "") {
                             add_entry = true;
+                        } else {
+                            let searchable_array = Object.values(currentEntry)
+                            searchable_array.forEach((meta) => {
+                                if (meta !== null && meta.type !== Boolean && meta.toString().includes(this.state.searchString)) {
+                                    add_entry = true;
+                                }
+                            });
                         }
-                    });
-
-                    if (add_entry && (counter <= this.state.maxInputs)) {
-                        rows.push(
-                            <Entry key={counter} position={counter} metadata={currentEntry}/>
-                        )
+                        if (add_entry && (counter <= this.state.maxInputs)) {
+                            rows.push(
+                                <Entry key={counter} position={counter} metadata={currentEntry}/>
+                            )
+                        }
                     }
-                }
-                counter += 1;
-            });
+
+                    counter += 1;
+                    if (!add_entry) {
+                        counter -= 1;
+                        console.log(currentEntry.resource_title)
+                    }
+                });
             return (
                 <div className="library-app">
                     <img src={header_logo} alt="header" className={"image"}/>
