@@ -2,7 +2,7 @@
   "name": "dynamic-table",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://henrichsen.github.io/React_HydroShare_App_Library_demo",
+  "homepage": "http://henrichsen.github.io",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
