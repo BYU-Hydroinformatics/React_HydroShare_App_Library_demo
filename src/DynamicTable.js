@@ -1,7 +1,7 @@
 import React from "react";
 import header_logo from "./img/header.png";
 import footer_logo from "./img/footer.png";
-import {loadResources} from "loadResources.js"
+import {loadResources} from "./loadResources.js"
 
 import {Entry} from "./Entry.js";
 

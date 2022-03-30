@@ -12,11 +12,11 @@ class InputView extends React.Component {
             ref: []
         }
         this.openUrl = this.openUrl.bind(this);
-        let counter = 1;
-        this.state.inputs.forEach(() => {
-            this.state.ref[counter] = React.createRef()
-            counter += 1;
-        });
+        /*    let counter = 1;
+            this.state.inputs.forEach(() => {
+                this.state.ref[counter] = React.createRef()
+                counter += 1;
+            });*/
 
     }
 

@@ -5,7 +5,7 @@ import {DynamicTable} from "./DynamicTable.js";
 
 const backendUrl= "http://localhost:4000/auth/hydroshare"
 
-function getHydroShareUser(){
+/*function getHydroShareUser(){
     const url = "https://www.hydroshare.org/hsapi/user/";
     fetch(url)
         .then (function (response){
@@ -24,7 +24,7 @@ function getHydroShareUser(){
             }
         })
 }
-
+*/
 
 function HydroShareLogin() {
 
