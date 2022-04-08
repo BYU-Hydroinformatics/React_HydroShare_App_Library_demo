@@ -130,7 +130,7 @@ class Entry extends React.Component {
 
     render() {
         return (
-            <div className="full-entry" id={"App_Entry_#" + this.state.key}>
+            <div className="full-entry" id={"App_Entry_#" + this.state.key} >
                 <div
                     className={this.state.expandedState ? this.state.color + " entry expanded" : this.state.color + " entry"}>
                     <div className='grid-1-1'>

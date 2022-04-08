@@ -79,13 +79,13 @@ class DynamicTable extends React.Component {
     }
 
     updateTable(){
-        if(!this.state.changeRows){
+        if(!this.state.changeRows||!this.state.entriesLoaded){
             return;
         }
         this.setState({
             changeRows:false,
+            displayRows:[],
         })
-        console.log("---------------------")
         let rows= [];
         let counter = 1;
         this.state.entries.forEach((currentEntry) => {
@@ -106,7 +106,6 @@ class DynamicTable extends React.Component {
                     });
                 }
                 if (add_entry && (counter <= this.state.maxInputs)) {
-                    console.log(currentEntry.resource_title)
                     counter += 1;
                     rows.push(
                         <Entry key={counter} position={counter} metadata={currentEntry}/>
@@ -123,7 +122,6 @@ class DynamicTable extends React.Component {
         if(!this.state.entries){
             return null;
         }
-        console.log(this.state.displayRows)
         return (
             <div className="library-app">
                 <img src={header_logo} alt="header" className={"image"}/>

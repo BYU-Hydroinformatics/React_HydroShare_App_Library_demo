@@ -26,24 +26,35 @@ const backendUrl= "http://localhost:4000/auth/hydroshare"
 }
 */
 
-function HydroShareLogin() {
+function HydroShareLogin(props) {
 
     return(
-        <form action={backendUrl}>
-            <button type="submit" className="login-button">
-                <span className="button-text"> Sign in with HydroShare</span>
-            </button>
+        <form>
+
+            <input type="text"
+                   style={{minWidth: 21.5+'em'}}
+                   value={props.name}
+                   placeholder={props.name ? props.name: "Change Username (For Demo Purposes Only)"}
+                   onChange={(e)=>{
+                       props.onChange(e.target.value)
+                   }}
+
+            />
+
         </form>
     );
-}
+};
 
 
 function App() {
-
+    const initial_user="Shawn Crawley";
+    const[username,setUsername] = React.useState(initial_user);
     return (
         <div>
-            <HydroShareLogin />
-            <DynamicTable user="David Tarboton"/>
+            <HydroShareLogin
+                onChange={(a)=>{setUsername(a) }}
+            />
+            <DynamicTable user={username} key={username}/>
         </div>
     );
 }
