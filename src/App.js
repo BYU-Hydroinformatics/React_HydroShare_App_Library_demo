@@ -3,27 +3,6 @@ import React from "react";
 
 import {DynamicTable} from "./DynamicTable.js";
 
-/*function getHydroShareUser(){
-    const url = "https://www.hydroshare.org/hsapi/user/";
-    fetch(url)
-        .then (function (response){
-            if(response.ok){
-                return(response.json())
-            }
-            throw new Error("User Not Obtained from HydroShare")
-        })
-        .then (function (data){
-            //console.log(data)
-            if(typeof data.id !== 'undefined'){
-                return data.id;
-            }
-            else{
-                return "";
-            }
-        })
-}
-*/
-
 function HydroShareLogin(props) {
 
     return(
