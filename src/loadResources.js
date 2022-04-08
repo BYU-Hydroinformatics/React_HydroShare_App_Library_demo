@@ -4,7 +4,7 @@ export async function loadResources(){
      *  This function authenticates the user with HydroShare and then loads all web app connectors the user has access to.
      */
     const getResourcesUrl= "https://www.hydroshare.org/hsapi/resource/?edit_permission=false&published=false&type=ToolResource&include_obsolete=false";
-    let value=await fetch(getResourcesUrl)
+    return await fetch(getResourcesUrl)
         .then(function (response){
             if(response.ok){
                 return(response.json());
@@ -14,7 +14,6 @@ export async function loadResources(){
         .then(function (data){
             return addDublin(data.results);
         })
-    return value;
 
 }
 
@@ -45,7 +44,7 @@ function processMetadata(fullMetadata){
         resource.creators.forEach(creator =>{
             if(resource.creator === creator.name){
                 resource.creator_url=creator.description;
-            };
+            }
         });
 
         let concat ="";

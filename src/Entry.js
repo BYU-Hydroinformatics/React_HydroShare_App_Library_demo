@@ -135,7 +135,7 @@ class Entry extends React.Component {
                     className={this.state.expandedState ? this.state.color + " entry expanded" : this.state.color + " entry"}>
                     <div className='grid-1-1'>
                         <a href={this.state.metadata?.app_home_page_url?.value} target="_blank" rel="noreferrer">
-                            <img type="image"
+                            <img
                                  src={this.state.metadata.app_icon.value}
                                  alt={this.state.metadata.title}
                                  onError={(event) => {
