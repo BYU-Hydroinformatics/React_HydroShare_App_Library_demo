@@ -3,8 +3,6 @@ import React from "react";
 
 import {DynamicTable} from "./DynamicTable.js";
 
-const backendUrl= "http://localhost:4000/auth/hydroshare"
-
 /*function getHydroShareUser(){
     const url = "https://www.hydroshare.org/hsapi/user/";
     fetch(url)
@@ -43,8 +41,7 @@ function HydroShareLogin(props) {
 
         </form>
     );
-};
-
+}
 
 function App() {
     const initial_user="Shawn Crawley";
