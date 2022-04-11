@@ -52,7 +52,7 @@ a:active, a:hover {
     }
 }
 
-.app-abstract, .app-abstract-expanded{
+.app-abstract, .app-abstract-expanded {
     grid-row-start: 4;
     grid-row-end: 4;
     grid-column-start: 2;
@@ -61,19 +61,19 @@ a:active, a:hover {
     text-align: left;
     min-height: 3em;
     text-overflow: ellipsis;
-    overflow: hidden;
     white-space: nowrap;
 
 }
 
-.app-abstract-expanded{
+.app-abstract-expanded {
     text-overflow: unset;
     overflow: auto;
     white-space: normal;
 }
 
-.app-citation{
-    grid-column-start:1; grid-column-end: 3;
+.app-citation {
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
 .app-expand {
@@ -90,19 +90,20 @@ a:active, a:hover {
     border-right: 1px solid #AAA;
 }
 
-.app-grid-expanded{
+.app-grid-expanded {
     max-width: 100%;
     grid-template-columns:99%;
     border-left: 1px solid #AAA;
     border-right: 1px solid #AAA;
-    row-gap: 0px;
+    row-gap: 0;
     font-size: 14px;
     overflow-wrap: break-word;
 
 }
-.app-grid-expanded > div{
+
+.app-grid-expanded > div {
     padding-right: 8px;
-    padding-top: 0px;
+    padding-top: 0;
 }
 
 .app-inputs {
@@ -125,10 +126,10 @@ a:active, a:hover {
     grid-column-end: 4;
     grid-row: 2;
     margin: auto;
-    width : 100%;
+    width: 100%;
 }
 
-body, html{
+body, html {
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
     line-height: 1.428571429;
@@ -136,8 +137,8 @@ body, html{
     -webkit-text-size-adjust: 100%;
 }
 
-.btn{
-    box-shadow: 0 1px 0 rgb(255 255 255 / 30%) inset;
+.btn {
+    box-shadow: 0 1px 0 rgba(255 255 25 .30) inset;
 }
 
 .btn:not(:disabled):not(.disabled) {
@@ -179,7 +180,8 @@ body, html{
     padding: .2em .4em .3em .4em;
     cursor: pointer;
 }
-.button-expand{
+
+.button-expand {
     top: 9%;
 }
 
@@ -200,19 +202,20 @@ body, html{
     grid-template-rows: auto 1.5em 1.5em 2.5em;
     max-width: 100%;
 }
-.entry.expanded .grid-1-1{
+
+.entry.expanded .grid-1-1 {
     vertical-align: top;
     position: relative;
-    top: 0px;
+    top: 0;
     grid-row-end: 5;
-    padding: 2px 0px 0px;
+    padding: 2px 0 0;
 }
 
 .expanded {
     grid-template-rows: auto 1.5em 1.5em auto;
 }
 
-form input{
+form input {
     margin: 5px;
 
 }
@@ -222,7 +225,6 @@ form input{
     flex-direction: column;
 }
 
-
 .grid-1-1 {
     grid-row-start: 1;
     grid-row-end: 5;
@@ -231,17 +233,18 @@ form input{
     margin-left: .25em;
     max-width: 93%;
     height: 8.3em;
-    padding: 2px 0px 0px;
+    padding: 2px 0 0;
 
 }
-.grid-1-1 img{
-    width:100%;
+
+.grid-1-1 img {
+    width: 100%;
     max-height: 7.8em;
     max-width: 7.8em;
 }
 
-h1{
-text-align: center;
+h1 {
+    text-align: center;
     font-weight: 500;
     padding-bottom: 5px;
     border-bottom: 1px solid #DDD;
@@ -250,7 +253,7 @@ text-align: center;
     line-height: 1.1;
 }
 
-.header{
+.header {
     grid-template-rows: auto;
     border: 0;
 }
@@ -261,7 +264,7 @@ html, body {
     height: 100%;
 }
 
-.image{
+.image {
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -276,20 +279,21 @@ html, body {
     margin: auto;
     width: 100%;
 }
-.image-tags > p{
+
+.image-tags > p {
     font-style: italic;
     color: #777777;
-    margin: 0px 0px 0px 0px;
+    margin: 0 0 0 0;
 }
 
 .image-tags-image {
     height: 16px;
     max-height: 100%;
-    padding: 0px .33em 2px 2px;
+    padding: 0 .33em 2px 2px;
     align-self: center;
 }
 
-.input-form{
+.input-form {
     padding: 5px;
     background-color: palegoldenrod;
     display: grid;
@@ -301,7 +305,8 @@ html, body {
     grid-template-columns:auto;
     grid-template-rows:auto;
 }
-.infinite-scroll{
+
+.infinite-scroll {
     display: block;
     position: absolute;
     margin-left: 40%;
@@ -312,7 +317,8 @@ html, body {
     line-height: 200%;
     margin-bottom: 1em;
 }
-.introduction{
+
+.introduction {
     position: relative;
     font-size: 20px;
     width: 90%;
@@ -321,23 +327,25 @@ html, body {
     text-align: left;
     padding-bottom: 1em;
 }
-.load-more{
-    left: 0%;
+
+.load-more {
+    left: 0;
     height: 2.5em;
     width: 100%;
-    top: 0%;
+    top: 0;
     text-align: center;
 
 }
 
-.library{
+.library {
     position: absolute;
 }
 
 .light-theme {
     background-color: #ffffff;
 }
-#search-box{
+
+#search-box {
     width: auto;
     padding-right: .25em;
     margin-bottom: .5em;
@@ -345,7 +353,7 @@ html, body {
     display: inline-block;
 }
 
-.search-box{
+.search-box {
     width: 100%;
     text-align: center;
     line-height: 150%;
@@ -353,24 +361,26 @@ html, body {
 }
 
 
-.form-check-input[type=checkbox]{
+.form-check-input[type=checkbox] {
     margin-right: 3px;
     border-radius: 0;
     padding: 0;
     box-sizing: border-box;
-    outline: 0px;
+    outline: 0;
     font-size: 14px;
     cursor: pointer;
 }
-input[type=checkbox]:focus{
-    outline: 0px;
+
+input[type=checkbox]:focus {
+    outline: 0;
 }
-.form-check-inline{
+
+.form-check-inline {
     font-weight: normal;
 }
 
-.form-check-inline:last-child{
-    margin-right: 0px;
+.form-check-inline:last-child {
+    margin-right: 0;
 }
 
 .table {
@@ -379,21 +389,23 @@ input[type=checkbox]:focus{
     left: 10%;
     display: flex;
     flex-direction: column;
-    padding-bottom: 0px;
+    padding-bottom: 0;
     border-bottom: 1px solid #AAA;
 }
-.table>:not(caption)>*>*.app-name {
+
+.table > :not(caption) > * > *.app-name {
     padding-top: 7px;
-    padding-bottom: 0px;
-}
-.table>:not(caption)>*>*{
-    padding-top: 0px;
+    padding-bottom: 0;
 }
 
-.table>:not(caption)>*>*.grid-1-1{
-    padding: 2px 0px 0px;
+.table > :not(caption) > * > * {
+    padding-top: 0;
 }
 
-.table>:not(caption)>*>*.grid-1-1.expanded{
-    padding: 1px 0px 0px;
+.table > :not(caption) > * > *.grid-1-1 {
+    padding: 2px 0 0;
+}
+
+.table > :not(caption) > * > *.grid-1-1.expanded {
+    padding: 1px 0 0;
 }

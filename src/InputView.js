@@ -2,7 +2,7 @@ import React from "react";
 
 const url_search = new RegExp(/\${HS_[A-Z]*_[A-Z]*}/g);
 
-class InputView extends React.Component {
+export default class InputView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -64,5 +64,3 @@ class InputView extends React.Component {
         );
     }
 }
-
-export default InputView;
